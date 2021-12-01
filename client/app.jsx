@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from './pages/home';
 import Header from './components/header';
+import Info from './pages/info';
 import { parseRoute } from './lib';
 
 export default class App extends React.Component {
@@ -25,6 +26,8 @@ export default class App extends React.Component {
     const { route } = this.state;
     if (route.path === '') {
       return <Home />;
+    } else if (route.path === 'info') {
+      return <Info />;
     }
   }
 

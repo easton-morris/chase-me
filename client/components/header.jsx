@@ -13,10 +13,10 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="mb-5">
-        <nav className="navbar navbar-expand-lg navbar-light">
+        <nav className="navbar navbar-expand-sm navbar-light bg-nav">
           <div className="container-fluid">
             <a href="#" className="navbar-brand">
-              <img src="../favicon.ico" alt="Chase.me Icon" />Chase.me
+              <img src="../favicon.ico" alt="Chase.me Icon" width="30" height="30" />Chase.me
             </a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
@@ -24,9 +24,9 @@ export default class Header extends React.Component {
             <div className="collapse navbar-collapse" id="navbarToggler">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item dropdown">
-                  <a href="#mylists" className="nav-link dropdown-toggle" id="listsDropdown">My Lists</a>
+                  <a href="#mylists" className="nav-link dropdown-toggle" id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
                   <ul className="dropdown-menu" aria-labelledby="listsDropdown">
-                    <li><a href="#mylists">1</a></li>
+                    <li><a href="#mylists">+New List</a></li>
                   </ul>
                 </li>
                 <li className="nav-item">
