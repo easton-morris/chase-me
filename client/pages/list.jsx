@@ -1,7 +1,7 @@
 import React from 'react';
 import AddACard from '../components/add-a-card';
 
-export default class lists extends React.Component {
+export default class List extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,9 +18,7 @@ export default class lists extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col">
             <AddACard />
-          </div>
         </div>
       </div>
     );

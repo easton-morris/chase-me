@@ -8,13 +8,11 @@ export default class AddACard extends React.Component {
 
   render() {
     return (
-      <div className="col">
+      <div className="col-2">
         <div className="container">
-          <div className="cardItem shadow-sm">
-            <div className="card-bg">
-              <div className="circle-bg">
-                <p>&plus;</p>
-              </div>
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <button type="button" className="btn btn-outline-dark">Add a Card</button>
             </div>
           </div>
         </div>

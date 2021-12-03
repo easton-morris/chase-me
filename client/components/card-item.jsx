@@ -10,8 +10,8 @@ export default class CardItem extends React.Component {
     return (
       <div className="col">
         <div className="container">
-          <div className="cardItem shadow-sm">
-            <div className="card-bg">
+          <div className="card shadow-sm">
+            <div className="card-body">
               <p>Card Info to Go Here</p>
             </div>
           </div>
