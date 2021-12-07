@@ -257,7 +257,7 @@ export default class SearchModal extends React.Component {
   }
 
   DatalistItem(props) {
-    return <option value={this.props.value}></option>;
+    return <option value={props.value} />;
   }
 
   SearchModalItem(props) {
@@ -294,15 +294,15 @@ export default class SearchModal extends React.Component {
     );
   }
 
-  componentDidMount() {
-
-  }
-
   addCardHandler() {
 
   }
 
   onSearchChangeHandler() {
+
+  }
+
+  componentDidMount() {
 
   }
 
