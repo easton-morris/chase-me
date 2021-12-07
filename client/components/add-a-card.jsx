@@ -12,7 +12,7 @@ export default class AddACard extends React.Component {
         <div className="container">
           <div className="card shadow-sm">
             <div className="card-body">
-              <button type="button" className="btn btn-outline-dark">Add a Card</button>
+              <button type="button" className="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#searchModal">Add a Card</button>
             </div>
           </div>
         </div>
