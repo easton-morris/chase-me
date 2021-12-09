@@ -1,0 +1,17 @@
+.bg-nav {
+  background-color: #ec4949;
+}
+
+.circle-bg {
+  width: 25px;
+  height: 25px;
+  background-color: grey;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.add-a-card {
+  display: flex;
+  justify-content: center;
+}
