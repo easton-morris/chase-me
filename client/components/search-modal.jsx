@@ -1,7 +1,7 @@
 import React from 'react';
 import pokemon from 'pokemontcgsdk';
 
-pokemon.configure({ apiKey: '311567c3-099d-4c46-b373-5189bd577b08' });
+pokemon.configure({ apiKey: process.env.PKMN_APIKEY });
 
 export default class SearchModal extends React.Component {
   constructor(props) {
