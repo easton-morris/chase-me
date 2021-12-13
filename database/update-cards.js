@@ -22,10 +22,11 @@ const checkSql = `
 //   VALUES ($1, $2, $3, $4, $5, $6, $7)
 // `;
 
-for (let ii = 1; ii < 100; ii++) {
+for (let ii = 1; ii < 50; ii++) {
   pokemon.card.where({ page: ii })
     .then(result => {
-      // console.log(result);
+      // eslint-disable-next-line
+      console.log(result);
       if (result.count === 0) {
         // eslint-disable-next-line
         console.log('reached end of list.');
