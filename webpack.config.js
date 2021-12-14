@@ -1,4 +1,5 @@
 require('dotenv/config');
+const webpack = require('webpack');
 const path = require('path');
 
 const clientPath = path.join(__dirname, 'client');
@@ -44,5 +45,12 @@ module.exports = {
   stats: 'summary',
   performance: {
     hints: false
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        PKNMTCG_APIKEY: JSON.stringify(process.env.PKNMTCG_APIKEY)
+      }
+    })
+  ]
 };

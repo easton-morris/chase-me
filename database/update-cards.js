@@ -39,16 +39,13 @@ for (let ii = 1; ii < 60; ii++) {
                   // eslint-disable-next-line
                   console.log(newGrade);
                 })
-                // eslint-disable-next-line
-                .catch(Error => console.log(Error));
+                .catch(Error => console.error(Error));
             }
           })
-        // eslint-disable-next-line
-            .catch(Error => console.log(Error));
+          .catch(Error => console.error(Error));
       }
     })
-    // eslint-disable-next-line
-    .catch(Error => console.log(Error, "reached end of list."))
+    .catch(Error => console.error(Error, 'reached end of list.'))
     .finally(() => {
       // eslint-disable-next-line
       console.log(`finished with update, page ${ii}`);
