@@ -1,8 +1,10 @@
 require('dotenv/config');
 const pg = require('pg');
+const argon2 = require('argon2');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const ClientError = require('./client-error');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -19,9 +21,7 @@ const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
 
-app.use(errorMiddleware);
-
-app.get('/api/cards/names', (req, res) => {
+app.get('/api/cards/names', (req, res, next) => {
   const sql = `
     SELECT DISTINCT "cardName"
     FROM "cards"
@@ -43,7 +43,7 @@ app.get('/api/cards/names', (req, res) => {
     });
 });
 
-app.get('/api/cards/objects', (req, res) => {
+app.get('/api/cards/objects', (req, res, next) => {
   const sql = `
     SELECT "cardObj"
     FROM "cards"
@@ -66,7 +66,53 @@ app.get('/api/cards/objects', (req, res) => {
     });
 });
 
+app.post('/api/users/sign-up', (req, res, next) => {
+  const { username, email, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+
+  argon2.hash(password)
+    .then(hashedPW => {
+      const sql = `
+       INSERT INTO "users" ("username", "email", "hashPw")
+       VALUES ($1, $2, $3)
+       RETURNING *
+      `;
+      const params = [username, email, hashedPW];
+      db.query(sql, params)
+        .then(result => {
+          const [newSignUp] = result.rows;
+          res.status(201).json(newSignUp);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/lists/new-list', (req, res, next) => {
+  const { userId, listName } = req.body;
+
+  if (!userId) {
+    throw new ClientError(400, 'user must be signed in to save list');
+  }
+  const sql = `
+    INSERT INTO "lists" ("userId", "listName", "cards")
+    VALUES ($1, $2, $3)
+    RETURNING *
+  `;
+  const params = [userId, listName, {}];
+  db.query(sql, params)
+    .then(result => {
+      const [newList] = result.rows;
+      res.status(201).json(newList);
+    })
+    .catch(err => next(err));
+});
+
 app.patch('api/lists/');
+
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
