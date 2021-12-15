@@ -75,8 +75,27 @@ export default class SearchModal extends React.Component {
     );
   }
 
-  addCardHandler() {
-
+  addCardHandler(event) {
+    const listId = 2;
+    fetch(`/api/cardLists/${listId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cardId: this.state.cardToAdd
+      })
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          this.setState({
+            cardToAdd: null
+          });
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   searchHandler(event) {
@@ -109,7 +128,7 @@ export default class SearchModal extends React.Component {
       })
       .catch(err => console.error(err));
 
-    fetch('/api/cards/objects')
+    fetch('/api/cards/sample/10')
       .then(res => {
         if (!res.ok) {
           throw new Error('Something went wrong.');
@@ -170,7 +189,7 @@ export default class SearchModal extends React.Component {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button onSubmit={this.addCardHandler} type="button" className="btn btn-primary" data-bs-dismiss="modal">Add Card</button>
+                <button onClick={this.addCardHandler} type="button" className="btn btn-primary" data-bs-dismiss="modal">Add Card</button>
             </div>
           </div>
         </div>
