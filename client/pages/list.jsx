@@ -11,6 +11,14 @@ export default class List extends React.Component {
       listId: 2,
       list: []
     };
+
+    this.addCardToList = this.addCardToList.bind(this);
+  }
+
+  addCardToList(card) {
+    this.setState({
+      list: [...this.state.list, card]
+    });
   }
 
   componentDidMount() {
@@ -62,9 +70,9 @@ export default class List extends React.Component {
   render() {
     return (
       <div className="container">
-            <SearchModal />
-            <CardItems list={this.state.list}/>
+            <SearchModal addCardToList={this.addCardToList} />
             <AddACard />
+            <CardItems list={this.state.list}/>
       </div>
     );
   }

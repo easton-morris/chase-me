@@ -32,9 +32,18 @@ export default class SearchModal extends React.Component {
     if (event.target.className !== 'table-info') {
       event.target.className = 'table-info';
     }
-    this.setState({
-      cardToAdd: event.target.textContent
-    });
+    fetch(`/api/cards/${event.target.textContent}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(result => {
+        this.setState({
+          cardToAdd: result
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   DatalistItem(props) {
@@ -90,6 +99,7 @@ export default class SearchModal extends React.Component {
         if (!res.ok) {
           throw new Error('Something went wrong.');
         } else {
+          this.props.addCardToList(this.state.cardtoAdd);
           this.setState({
             cardToAdd: null
           });
