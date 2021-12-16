@@ -70,9 +70,9 @@ export default class List extends React.Component {
   render() {
     return (
       <div className="container">
-            <SearchModal addCardToList={this.addCardToList} />
             <AddACard />
-            <CardItems list={this.state.list}/>
+            <SearchModal addCardToList={this.addCardToList} />
+            <CardItems list={this.state.list} />
       </div>
     );
   }
