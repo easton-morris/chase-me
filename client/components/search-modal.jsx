@@ -1,7 +1,7 @@
 import React from 'react';
 import pokemon from 'pokemontcgsdk';
 
-pokemon.configure({ apiKey: '311567c3-099d-4c46-b373-5189bd577b08' });
+pokemon.configure({ apiKey: process.env.PKMN_APIKEY });
 
 export default class SearchModal extends React.Component {
   constructor(props) {
@@ -12,13 +12,43 @@ export default class SearchModal extends React.Component {
     this.SearchResultsBody = this.SearchResultsBody.bind(this);
     this.DatalistItem = this.DatalistItem.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
+    this.addCardHandler = this.addCardHandler.bind(this);
+    this.cardSelectHandler = this.cardSelectHandler.bind(this);
+    this.addCardToList = this.props.addCardToList.bind(this);
 
     this.state = {
       pokeList: [],
       nameList: [],
-      searchValue: 'Jolteon'
+      searchValue: '',
+      cardToAdd: null
     };
 
+  }
+
+  cardSelectHandler(event) {
+    const $thList = document.querySelectorAll('th');
+    for (let jj = 0; jj < $thList.length; jj++) {
+      $thList[jj].className = '';
+    }
+    if (event.target.className !== 'table-info') {
+      event.target.className = 'table-info';
+    }
+    fetch(`/api/cards/${event.target.textContent}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(result => {
+        return result.json();
+      })
+      .then(cardRes => {
+        this.setState({
+          cardtoAddId: cardRes.cardId,
+          cardToAdd: cardRes
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   DatalistItem(props) {
@@ -28,7 +58,7 @@ export default class SearchModal extends React.Component {
   SearchModalItem(props) {
     return (
       <tr>
-        <th scope="row">{props.value.id}</th>
+        <th scope="row" onClick={this.cardSelectHandler}>{props.value.id}</th>
         <td>{props.value.set.name}</td>
         <td>{props.value.name}</td>
       </tr>
@@ -36,12 +66,12 @@ export default class SearchModal extends React.Component {
   }
 
   SearchDatalist() {
-    const pokeList = this.state.pokeList;
-    const listItems = pokeList.map(pokeCard =>
-      <this.DatalistItem key={pokeCard.id} value={pokeCard.name} />
+    const nameList = this.state.nameList;
+    const listItems = nameList.map((pokeName, index) =>
+      <this.DatalistItem key={index} value={pokeName} />
     );
     return (
-      <datalist id="pokeList">
+      <datalist id="nameList">
         {listItems}
       </datalist>
     );
@@ -59,14 +89,36 @@ export default class SearchModal extends React.Component {
     );
   }
 
-  addCardHandler() {
-
+  addCardHandler(event) {
+    const listId = 2;
+    fetch(`/api/cardLists/${listId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cardId: this.state.cardToAdd.cardId
+      })
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          const card = this.state.cardToAdd;
+          this.addCardToList(card);
+          this.setState({
+            cardToAdd: null,
+            cardToAddId: null
+          });
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   searchHandler(event) {
     const $pokeSearch = document.getElementById('cardSearch');
     if ($pokeSearch.value !== this.state.searchValue) {
-      pokemon.card.all({ q: `name:${$pokeSearch.value}*` })
+      pokemon.card.all({ q: `name:"${$pokeSearch.value}"` })
         .then(result => {
           this.setState({
             pokeList: result,
@@ -78,13 +130,35 @@ export default class SearchModal extends React.Component {
   }
 
   componentDidMount() {
-    pokemon.card.all({ q: 'name:jolteon' })
-      .then(result => {
-        this.setState({
-          pokeList: result
+    fetch('/api/cards/names')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(nameList => {
+        return this.setState({
+          nameList
         });
-      });
+      })
+      .catch(err => console.error(err));
 
+    fetch('/api/cards/sample/10')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(pokeList => {
+        return this.setState({
+          pokeList
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -103,10 +177,10 @@ export default class SearchModal extends React.Component {
                   <h4>Search by Name</h4>
                   <div className="search-area">
                     <form action="" onSubmit={this.searchHandler}>
-                      <label htmlFor="cardSearch" className="form-label">Card Search</label>
+                        <label htmlFor="cardSearch" className="form-label">...then select an ID and click &#34;Add Card&#34;</label>
                       <div className="row">
                         <div className="col-auto">
-                          <input className="form-control" list="pokeList" id="cardSearch" placeholder="Jolteon"/>
+                          <input className="form-control" list="nameList" id="cardSearch" placeholder="Jolteon"/>
                           <this.SearchDatalist />
                         </div>
                         <div className="col-auto">
@@ -132,7 +206,7 @@ export default class SearchModal extends React.Component {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Add Card</button>
+                <button onClick={this.addCardHandler} type="button" className="btn btn-primary" data-bs-dismiss="modal">Add Card</button>
             </div>
           </div>
         </div>
