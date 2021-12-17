@@ -14,8 +14,10 @@ export default class CardItems extends React.Component {
     };
   }
 
-  removeHandler() {
-
+  removeHandler(event) {
+    // console.log('currtar', event.currentTarget);
+    // console.log('tar', event.target);
+    // this.props.removeCardFromList(cardId);
   }
 
   featureHandler() {
@@ -30,12 +32,12 @@ export default class CardItems extends React.Component {
             <h4 className="card-title">{props.cardName}</h4>
             <h5 className="card-subtitle mb-2 text-muted">{props.setName}</h5>
             <img className="img-thumbnail" src={props.cardImg} alt={props.cardName} />
-            <div className="card-body">
-              {/* <p className="card-text">{props.flavorText}</p> */}
+            <div onClick={this.removeHandler} className="card-body">
+              <p className="card-text">{props.cardId}</p>
               <div className="row">
                 <div className="btn-group">
                   <button onClick={this.featureHandler} className="btn btn-warning">Feature</button>
-                  <button onClick={this.removeHandler} className="btn btn-danger">Remove</button>
+                  <button className="btn btn-danger">Remove</button>
                 </div>
               </div>
             </div>
@@ -50,7 +52,7 @@ export default class CardItems extends React.Component {
   CardItemsBody() {
     const cardList = this.props.list;
     const cardItems = cardList.map(card => {
-      return <this.CardItem key={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} flavorText="missing" />;
+      return <this.CardItem key={card.cardId} cardId={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} flavorText="missing" />;
     }
     );
     return (

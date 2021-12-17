@@ -13,11 +13,21 @@ export default class List extends React.Component {
     };
 
     this.addCardToList = this.addCardToList.bind(this);
+    this.removeCardFromList = this.removeCardFromList.bind(this);
   }
 
   addCardToList(card) {
     this.setState({
       list: [...this.state.list, card]
+    });
+  }
+
+  removeCardFromList(card) {
+    const newList = [...this.state.list];
+    const targetCard = newList.find(element => element.cardId === card.cardId);
+    newList.splice(targetCard, 1);
+    this.setState({
+      list: newList
     });
   }
 
@@ -72,7 +82,7 @@ export default class List extends React.Component {
       <div className="container">
             <AddACard />
             <SearchModal addCardToList={this.addCardToList} />
-            <CardItems list={this.state.list} />
+            <CardItems removeCardFromList={this.removeCardFromList} list={this.state.list} />
       </div>
     );
   }
