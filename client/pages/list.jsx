@@ -83,8 +83,8 @@ export default class List extends React.Component {
       <div className="container">
             <AddACard />
             <SearchModal addCardToList={this.addCardToList} />
-            <ConfirmDelete />
-            <CardItems removeCardFromList={this.removeCardFromList} list={this.state.list} />
+            <ConfirmDelete removeCardFromList={this.removeCardFromList} />
+            <CardItems list={this.state.list} />
       </div>
     );
   }
