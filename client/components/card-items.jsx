@@ -37,7 +37,7 @@ export default class CardItems extends React.Component {
               <div className="row">
                 <div className="btn-group">
                   <button onClick={this.featureHandler} className="btn btn-warning">Feature</button>
-                  <button className="btn btn-danger">Remove</button>
+                  <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
                 </div>
               </div>
             </div>

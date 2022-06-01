@@ -2,6 +2,7 @@ import React from 'react';
 import AddACard from '../components/add-a-card';
 import SearchModal from '../components/search-modal';
 import CardItems from '../components/card-items';
+import ConfirmDelete from '../components/confirm-delete';
 
 export default class List extends React.Component {
   constructor(props) {
@@ -82,6 +83,7 @@ export default class List extends React.Component {
       <div className="container">
             <AddACard />
             <SearchModal addCardToList={this.addCardToList} />
+            <ConfirmDelete />
             <CardItems removeCardFromList={this.removeCardFromList} list={this.state.list} />
       </div>
     );
