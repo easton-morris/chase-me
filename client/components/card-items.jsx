@@ -13,14 +13,12 @@ export default class CardItems extends React.Component {
     };
   }
 
-  removeHandler(event) {
-    // console.log('currtar', event.currentTarget);
-    // console.log('tar', event.target);
-    // console.log('cardId', event.currentTarget.data);
-    this.props.selCardToRemove(this.props.card);
+  removeHandler(obj) {
+    this.props.selCardToRemove(obj);
   }
 
   CardItem(props) {
+    const obj = props.fullCard;
     return (
       <div className="col-4">
         <div className="container">
@@ -28,11 +26,11 @@ export default class CardItems extends React.Component {
             <h4 className="card-title">{props.cardName}</h4>
             <h5 className="card-subtitle mb-2 text-muted">{props.setName}</h5>
             <img className="img-thumbnail" src={props.cardImg} alt={props.cardName} />
-            <div onClick={this.removeHandler} data={props.cardId} className="card-body">
+            <div className="card-body">
               <p className="card-text">{props.cardId}</p>
               <div className="row justify-content-end">
                 <div className="btn-group col-4">
-                  <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
+                  <button onClick={() => this.removeHandler(obj)} className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
                 </div>
               </div>
             </div>
