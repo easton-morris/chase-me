@@ -8,35 +8,17 @@ export default class ConfirmDelete extends React.Component {
 
     this.state = {
       cardName: '',
-      cardId: ''
+      cardToRemove: null
     };
 
   }
 
   confirmDelHandler(event) {
-    const listId = 2;
-    fetch(`api/cardLists/${listId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        cardId: this.state.cardId
-      })
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Something went wrong.');
-        } else {
-          const card = this.state.cardId;
-          this.props.removeCardFromList(card);
-          this.setState({
-            cardId: null,
-            cardName: null
-          });
-        }
-      })
-      .catch(err => console.error(err));
+
+  }
+
+  refuseDelHandler(event) {
+
   }
 
   render() {
@@ -53,7 +35,7 @@ export default class ConfirmDelete extends React.Component {
                 <p>`Delete ${this.props.cardName}`</p>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Refuse</button>
                 <button type="button" className="btn btn-primary">Confirm</button>
               </div>
             </div>

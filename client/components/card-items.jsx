@@ -11,7 +11,8 @@ export default class CardItems extends React.Component {
 
     this.state = {
       featured: false,
-      cardName: ''
+      showConfDel: false,
+      cardToDel: null
     };
   }
 
@@ -19,6 +20,29 @@ export default class CardItems extends React.Component {
     // console.log('currtar', event.currentTarget);
     // console.log('tar', event.target);
     // this.props.removeCardFromList(cardId);
+    const listId = 2;
+    fetch(`api/cardLists/${listId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cardId: this.state.cardId
+      })
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          const card = this.state.cardToRemove;
+          this.props.removeCardFromList(card);
+          this.setState({
+            cardId: null,
+            cardName: null
+          });
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   featureHandler() {
