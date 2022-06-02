@@ -10,11 +10,27 @@ export default class List extends React.Component {
 
     this.state = {
       listId: 2,
-      list: []
+      list: [],
+      cardToRemove: null,
+      showConf: false
     };
 
     this.addCardToList = this.addCardToList.bind(this);
     this.removeCardFromList = this.removeCardFromList.bind(this);
+    this.selectCardToRemove = this.selectCardToRemove.bind(this);
+    this.closeConfirmation = this.closeConfirmation.bind(this);
+  }
+
+  selectCardToRemove(card) {
+    this.setState({
+      cardToRemove: card
+    });
+  }
+
+  closeConfirmation() {
+    this.setState({
+      showConf: false
+    });
   }
 
   addCardToList(card) {
@@ -83,8 +99,8 @@ export default class List extends React.Component {
       <div className="container">
             <AddACard />
             <SearchModal addCardToList={this.addCardToList} />
-            <ConfirmDelete removeCardFromList={this.removeCardFromList} />
-            <CardItems list={this.state.list} />
+            <ConfirmDelete card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+            <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
       </div>
     );
   }

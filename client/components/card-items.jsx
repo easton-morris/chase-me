@@ -5,48 +5,19 @@ export default class CardItems extends React.Component {
     super(props);
 
     this.removeHandler = this.removeHandler.bind(this);
-    this.featureHandler = this.featureHandler.bind(this);
     this.CardItem = this.CardItem.bind(this);
     this.CardItemsBody = this.CardItemsBody.bind(this);
 
     this.state = {
-      featured: false,
-      showConfDel: false,
-      cardToDel: null
+      cardToRemove: null
     };
   }
 
   removeHandler(event) {
     // console.log('currtar', event.currentTarget);
     // console.log('tar', event.target);
-    // this.props.removeCardFromList(cardId);
-    const listId = 2;
-    fetch(`api/cardLists/${listId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        cardId: this.state.cardId
-      })
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Something went wrong.');
-        } else {
-          const card = this.state.cardToRemove;
-          this.props.removeCardFromList(card);
-          this.setState({
-            cardId: null,
-            cardName: null
-          });
-        }
-      })
-      .catch(err => console.error(err));
-  }
-
-  featureHandler() {
-
+    // console.log('cardId', event.currentTarget.data);
+    this.props.selCardToRemove(this.props.card);
   }
 
   CardItem(props) {
@@ -57,12 +28,11 @@ export default class CardItems extends React.Component {
             <h4 className="card-title">{props.cardName}</h4>
             <h5 className="card-subtitle mb-2 text-muted">{props.setName}</h5>
             <img className="img-thumbnail" src={props.cardImg} alt={props.cardName} />
-            <div onClick={this.removeHandler} className="card-body">
+            <div onClick={this.removeHandler} data={props.cardId} className="card-body">
               <p className="card-text">{props.cardId}</p>
-              <div className="row">
-                <div className="btn-group">
-                  <button onClick={this.featureHandler} className="btn btn-warning">Feature</button>
-                  <button onClick={this.removeHandler} className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
+              <div className="row justify-content-end">
+                <div className="btn-group col-4">
+                  <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
                 </div>
               </div>
             </div>
@@ -77,7 +47,7 @@ export default class CardItems extends React.Component {
   CardItemsBody() {
     const cardList = this.props.list;
     const cardItems = cardList.map(card => {
-      return <this.CardItem key={card.cardId} cardId={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} flavorText="missing" />;
+      return <this.CardItem key={card.cardId} cardId={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} fullCard={card} flavorText="missing" />;
     }
     );
     return (
