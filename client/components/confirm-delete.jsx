@@ -4,34 +4,32 @@ export default class ConfirmDelete extends React.Component {
   constructor(props) {
     super(props);
 
-    this.confirmDel = this.confirmDelHandler.bind(this);
+    this.confirmDelHandler = this.confirmDelHandler.bind(this);
     this.refuseDelHandler = this.refuseDelHandler.bind(this);
 
     this.state = {
-      cardName: null,
       cardToRemove: null
     };
 
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (this.props !== prevProps && this.props.card !== null) {
-  //     this.setState({
-  //       cardName: this.props.card.cardName,
-  //       cardToRemove: this.props.card
-  //     });
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps && this.props.card !== null) {
+      this.setState({
+        cardToRemove: this.props.card
+      });
+    }
+  }
 
   confirmDelHandler(event) {
     const listId = 2;
     fetch(`api/cardLists/${listId}`, {
-      method: 'PATCH',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        cardId: this.state.cardId
+        cardId: this.state.cardToRemove.cardId
       })
     })
       .then(res => {
@@ -41,8 +39,7 @@ export default class ConfirmDelete extends React.Component {
           const card = this.state.cardToRemove;
           this.props.removeCardFromList(card);
           this.setState({
-            cardId: null,
-            cardName: null
+            cardToRemove: null
           });
         }
       })
@@ -63,11 +60,11 @@ export default class ConfirmDelete extends React.Component {
                 <h2 className="modal-title" id="confirmDelModalLabel">Confirm Delete?</h2>
               </div>
               <div className="modal-body">
-                <p>`Delete ${this.props.cardName}?`</p>
+                <p>Delete ({!this.props.card ? '' : this.props.card.cardId}) &quot;{!this.props.card ? '' : this.props.card.cardName}&quot;?</p>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Refuse</button>
-                <button type="button" className="btn btn-primary">Confirm</button>
+                <button onClick={this.refuseDelHandler} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Refuse</button>
+                <button onClick={this.confirmDelHandler} type="button" className="btn btn-primary">Confirm</button>
               </div>
             </div>
           </div>

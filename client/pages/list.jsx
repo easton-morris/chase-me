@@ -11,8 +11,7 @@ export default class List extends React.Component {
     this.state = {
       listId: 2,
       list: [],
-      cardToRemove: null,
-      showConf: false
+      cardToRemove: null
     };
 
     this.addCardToList = this.addCardToList.bind(this);
@@ -29,7 +28,7 @@ export default class List extends React.Component {
 
   closeConfirmation() {
     this.setState({
-      showConf: false
+      cardToRemove: null
     });
   }
 
