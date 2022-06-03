@@ -23,7 +23,7 @@ export default class ConfirmDelete extends React.Component {
 
   confirmDelHandler(event) {
     const listId = 2;
-    fetch(`api/cardLists/${listId}`, {
+    fetch(`/api/cardLists/${listId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
