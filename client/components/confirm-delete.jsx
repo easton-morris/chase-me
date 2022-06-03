@@ -64,7 +64,7 @@ export default class ConfirmDelete extends React.Component {
               </div>
               <div className="modal-footer">
                 <button onClick={this.refuseDelHandler} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Refuse</button>
-                <button onClick={this.confirmDelHandler} type="button" className="btn btn-primary">Confirm</button>
+                <button onClick={this.confirmDelHandler} type="button" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
               </div>
             </div>
           </div>

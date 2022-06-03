@@ -227,7 +227,7 @@ app.patch('/api/cardLists/:listId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.delete('api/cardLists/:listId', (req, res, next) => {
+app.delete('/api/cardLists/:listId', (req, res, next) => {
   const { cardId } = req.body;
   const listId = parseInt(req.params.listId, 10);
 
@@ -256,7 +256,7 @@ app.delete('api/cardLists/:listId', (req, res, next) => {
     .then(result => {
       const currCardList = result;
       const cardCheck = currCardList.find(el => el === { cardId: cardId });
-      if (!cardCheck) {
+      if (cardCheck) {
         throw new ClientError(400, 'card is not in list');
       } else {
         const sql = `
@@ -267,11 +267,11 @@ app.delete('api/cardLists/:listId', (req, res, next) => {
         const params = [listId, cardId];
         db.query(sql, params)
           .then(result => {
-            const [newList] = result.rows;
-            if (!newList) {
+            const [delItems] = result.rows;
+            if (!delItems) {
               throw new ClientError(400, 'Something went wrong');
             } else {
-              res.status(200).json(newList);
+              res.status(200).json(delItems);
             }
           })
           .catch(err => next(err));
