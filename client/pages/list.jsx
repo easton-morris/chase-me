@@ -2,6 +2,7 @@ import React from 'react';
 import AddACard from '../components/add-a-card';
 import SearchModal from '../components/search-modal';
 import CardItems from '../components/card-items';
+import ConfirmDelete from '../components/confirm-delete';
 
 export default class List extends React.Component {
   constructor(props) {
@@ -9,15 +10,40 @@ export default class List extends React.Component {
 
     this.state = {
       listId: 2,
-      list: []
+      list: [],
+      cardToRemove: null
     };
 
     this.addCardToList = this.addCardToList.bind(this);
+    this.removeCardFromList = this.removeCardFromList.bind(this);
+    this.selectCardToRemove = this.selectCardToRemove.bind(this);
+    this.closeConfirmation = this.closeConfirmation.bind(this);
+  }
+
+  selectCardToRemove(card) {
+    this.setState({
+      cardToRemove: card
+    });
+  }
+
+  closeConfirmation() {
+    this.setState({
+      cardToRemove: null
+    });
   }
 
   addCardToList(card) {
     this.setState({
       list: [...this.state.list, card]
+    });
+  }
+
+  removeCardFromList(card) {
+    const newList = [...this.state.list];
+    const targetCard = newList.find(element => element.cardId === card.cardId);
+    newList.splice(targetCard, 1);
+    this.setState({
+      list: newList
     });
   }
 
@@ -72,7 +98,8 @@ export default class List extends React.Component {
       <div className="container">
             <AddACard />
             <SearchModal addCardToList={this.addCardToList} />
-            <CardItems list={this.state.list} />
+            <ConfirmDelete card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+            <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
       </div>
     );
   }

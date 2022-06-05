@@ -5,24 +5,20 @@ export default class CardItems extends React.Component {
     super(props);
 
     this.removeHandler = this.removeHandler.bind(this);
-    this.featureHandler = this.featureHandler.bind(this);
     this.CardItem = this.CardItem.bind(this);
     this.CardItemsBody = this.CardItemsBody.bind(this);
 
     this.state = {
-      featured: false
+      cardToRemove: null
     };
   }
 
-  removeHandler() {
-
-  }
-
-  featureHandler() {
-
+  removeHandler(obj) {
+    this.props.selCardToRemove(obj);
   }
 
   CardItem(props) {
+    const obj = props.fullCard;
     return (
       <div className="col-4">
         <div className="container">
@@ -31,11 +27,10 @@ export default class CardItems extends React.Component {
             <h5 className="card-subtitle mb-2 text-muted">{props.setName}</h5>
             <img className="img-thumbnail" src={props.cardImg} alt={props.cardName} />
             <div className="card-body">
-              {/* <p className="card-text">{props.flavorText}</p> */}
-              <div className="row">
-                <div className="btn-group">
-                  <button onClick={this.featureHandler} className="btn btn-warning">Feature</button>
-                  <button onClick={this.removeHandler} className="btn btn-danger">Remove</button>
+              <p className="card-text">{props.cardId}</p>
+              <div className="row justify-content-end">
+                <div className="btn-group col-4">
+                  <button onClick={() => this.removeHandler(obj)} className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
                 </div>
               </div>
             </div>
@@ -50,7 +45,7 @@ export default class CardItems extends React.Component {
   CardItemsBody() {
     const cardList = this.props.list;
     const cardItems = cardList.map(card => {
-      return <this.CardItem key={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} flavorText="missing" />;
+      return <this.CardItem key={card.cardId} cardId={card.cardId} cardName={card.cardName} setName={card.setName} cardImg={card.largePic} fullCard={card} flavorText="missing" />;
     }
     );
     return (

@@ -35,9 +35,9 @@ for (let ii = 1; ii < 60; ii++) {
               const params = [currentCard.id, currentCard.name, currentCard.set.name, currentCard.images.small, currentCard.images.large, currentCard.number, currentCard];
               db.query(insertSql, params)
                 .then(result => {
-                  const [newGrade] = result.rows;
+                  const [newRes] = result.rows;
                   // eslint-disable-next-line
-                  console.log(newGrade);
+                  console.log(newRes);
                 })
                 .catch(Error => console.error(Error));
             }

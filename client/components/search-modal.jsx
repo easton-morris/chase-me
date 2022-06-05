@@ -14,13 +14,13 @@ export default class SearchModal extends React.Component {
     this.searchHandler = this.searchHandler.bind(this);
     this.addCardHandler = this.addCardHandler.bind(this);
     this.cardSelectHandler = this.cardSelectHandler.bind(this);
-    this.addCardToList = this.props.addCardToList.bind(this);
 
     this.state = {
       pokeList: [],
       nameList: [],
       searchValue: '',
-      cardToAdd: null
+      cardToAdd: null,
+      cardToAddId: null
     };
 
   }
@@ -44,7 +44,7 @@ export default class SearchModal extends React.Component {
       })
       .then(cardRes => {
         this.setState({
-          cardtoAddId: cardRes.cardId,
+          cardToAddId: cardRes.cardId,
           cardToAdd: cardRes
         });
       })
@@ -105,7 +105,7 @@ export default class SearchModal extends React.Component {
           throw new Error('Something went wrong.');
         } else {
           const card = this.state.cardToAdd;
-          this.addCardToList(card);
+          this.props.addCardToList(card);
           this.setState({
             cardToAdd: null,
             cardToAddId: null

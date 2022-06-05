@@ -227,6 +227,59 @@ app.patch('/api/cardLists/:listId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/cardLists/:listId', (req, res, next) => {
+  const { cardId } = req.body;
+  const listId = parseInt(req.params.listId, 10);
+
+  if (!Number.isInteger(listId) || listId < 1) {
+    throw new ClientError(400, 'listId must be a positive integer');
+  }
+
+  if (!listId) {
+    throw new ClientError(400, 'listId is required');
+  }
+
+  const sql = `
+    SELECT "cardId"
+    FROM "cardLists"
+    WHERE "listId" = $1
+  `;
+  const params = [listId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows) {
+        throw new ClientError(400, 'Something went wrong');
+      } else {
+        return result.rows;
+      }
+    })
+    .then(result => {
+      const currCardList = result;
+      const cardCheck = currCardList.find(el => el === { cardId: cardId });
+      if (cardCheck) {
+        throw new ClientError(400, 'card is not in list');
+      } else {
+        const sql = `
+          DELETE FROM "cardLists"
+          WHERE "listId" = $1 AND "cardId" = $2
+          RETURNING *
+        `;
+        const params = [listId, cardId];
+        db.query(sql, params)
+          .then(result => {
+            const [delItems] = result.rows;
+            if (!delItems) {
+              throw new ClientError(400, 'Something went wrong');
+            } else {
+              res.status(200).json(delItems);
+            }
+          })
+          .catch(err => next(err));
+      }
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
