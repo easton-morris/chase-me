@@ -49,7 +49,7 @@ export default class List extends React.Component {
 
   componentDidMount() {
     const activeList = [];
-    fetch(`/api/lists/${this.state.listId}`, {
+    fetch(`/api/cardLists/${this.state.listId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

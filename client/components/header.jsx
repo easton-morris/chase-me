@@ -4,10 +4,58 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
 
+    this.UserListsItem = this.UserListsItem.bind(this);
+    this.UserLists = this.UserListsItem.bind(this);
+
     this.state = {
-      loggedIn: null,
+      loggedIn: 1,
       lists: []
     };
+  }
+
+  UserListsItem(props) {
+    return (
+      <li>
+        <a href="#mylists">{props.value}</a>
+      </li>
+    );
+  }
+
+  UserLists(props) {
+    const usersCardLists = this.state.lists;
+    const usersCardListsItems = usersCardLists.map((listName, listId) =>
+      <this.UserListsItem key={listId} value={listName} />
+    );
+    return (
+      <ul className="dropdown-menu" aria-labelledby="listsDropdown">
+        {usersCardListsItems}
+        <li><a href="#mylists">+New List</a></li>
+      </ul>
+    );
+  }
+
+  componentDidMount() {
+    if (this.state.loggedIn) {
+      fetch(`/api/lists/${this.state.loggedIn}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Something went wrong.');
+          } else {
+            return res.json();
+          }
+        })
+        .then(usersLists => {
+          return this.setState({
+            lists: usersLists
+          });
+        })
+        .catch(err => console.error(err));
+    }
   }
 
   render() {
@@ -25,9 +73,7 @@ export default class Header extends React.Component {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item dropdown">
                   <a href="#mylists" className="nav-link dropdown-toggle" id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
-                  <ul className="dropdown-menu" aria-labelledby="listsDropdown">
-                    <li><a href="#mylists">+New List</a></li>
-                  </ul>
+                  <this.UserLists />
                 </li>
                 <li className="nav-item">
                   <a href="#info" className="nav-link">Info</a>
