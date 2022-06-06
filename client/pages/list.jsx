@@ -40,7 +40,7 @@ export default class List extends React.Component {
 
   removeCardFromList(card) {
     const newList = [...this.state.list];
-    const targetCard = newList.find(element => element.cardId === card.cardId);
+    const targetCard = newList.findIndex(element => element.cardId === card.cardId);
     newList.splice(targetCard, 1);
     this.setState({
       list: newList
