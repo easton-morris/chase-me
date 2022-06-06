@@ -9,7 +9,7 @@ export default class List extends React.Component {
     super(props);
 
     this.state = {
-      listId: 2,
+      listId: this.props.activeListId,
       list: [],
       cardToRemove: null
     };

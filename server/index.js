@@ -188,7 +188,7 @@ app.get('/api/cardLists/:listId', (req, res, next) => {
   const params = [listId];
   db.query(sql, params)
     .then(result => {
-      if (result.rows[0]) {
+      if (!result.rows[0]) {
         res.status(200).json(result.rows);
       } else {
         res.sendStatus(204);
