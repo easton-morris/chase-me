@@ -1,4 +1,5 @@
 import React from 'react';
+import NewListModal from './new-list-modal';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class Header extends React.Component {
     return (
       <ul className="dropdown-menu" aria-labelledby="listsDropdown">
         {usersCardListsItems}
-        <li><a href="#mylists?listId=2">+New List</a></li>
+        <li><a data-bs-toggle="modal" data-bs-target="#newListModal">+New List</a></li>
       </ul>
     );
   }
@@ -61,6 +62,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="mb-5">
+        <NewListModal userId={this.state.loggedIn} />
         <nav className="navbar navbar-expand-sm navbar-light bg-nav">
           <div className="container-fluid">
             <a href="#" className="navbar-brand">

@@ -90,7 +90,7 @@ export default class SearchModal extends React.Component {
   }
 
   addCardHandler(event) {
-    const listId = 2;
+    const listId = this.props.activeList;
     fetch(`/api/cardLists/${listId}`, {
       method: 'PATCH',
       headers: {
