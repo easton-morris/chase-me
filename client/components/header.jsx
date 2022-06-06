@@ -5,7 +5,7 @@ export default class Header extends React.Component {
     super(props);
 
     this.UserListsItem = this.UserListsItem.bind(this);
-    this.UserLists = this.UserListsItem.bind(this);
+    this.UserLists = this.UserLists.bind(this);
 
     this.state = {
       loggedIn: 1,
@@ -16,15 +16,15 @@ export default class Header extends React.Component {
   UserListsItem(props) {
     return (
       <li>
-        <a href="#mylists">{props.value}</a>
+        <a href="#mylists">{props.value.listName}</a>
       </li>
     );
   }
 
   UserLists(props) {
     const usersCardLists = this.state.lists;
-    const usersCardListsItems = usersCardLists.map((listName, listId) =>
-      <this.UserListsItem key={listId} value={listName} />
+    const usersCardListsItems = usersCardLists.map(list =>
+      <this.UserListsItem key={list.listId} value={list} />
     );
     return (
       <ul className="dropdown-menu" aria-labelledby="listsDropdown">
