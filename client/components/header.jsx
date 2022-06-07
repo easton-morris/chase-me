@@ -9,7 +9,7 @@ export default class Header extends React.Component {
     this.UserLists = this.UserLists.bind(this);
 
     this.state = {
-      loggedIn: 1,
+      loggedIn: this.props.activeUser,
       lists: []
     };
   }
@@ -17,7 +17,7 @@ export default class Header extends React.Component {
   UserListsItem(props) {
     return (
       <li>
-        <a className='dropdown-item' href={`#mylists?listId=${props.value.listId}`}>{props.value.listName}</a>
+        <a className='dropdown-item' href={`#mylists?userId=${this.state.loggedIn}&listId=${props.value.listId}`}>{props.value.listName}</a>
       </li>
     );
   }
@@ -66,7 +66,7 @@ export default class Header extends React.Component {
         <NewListModal userId={this.state.loggedIn} />
         <nav className="navbar navbar-expand-sm navbar-light bg-nav">
           <div className="container-fluid">
-            <a href="#" className="navbar-brand">
+            <a href={`#?userId=${this.state.loggedIn}`} className="navbar-brand">
               <img src="../favicon.ico" alt="Chase.me Icon" width="30" height="30" />Chase.me
             </a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,11 +75,11 @@ export default class Header extends React.Component {
             <div className="collapse navbar-collapse" id="navbarToggler">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item dropdown">
-                  <a href="#mylists" className="nav-link dropdown-toggle" id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
+                  <a className="nav-link dropdown-toggle" id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
                   <this.UserLists />
                 </li>
                 <li className="nav-item">
-                  <a href="#info" className="nav-link">Info</a>
+                  <a href={`#info?userId=${this.state.loggedIn}`} className="nav-link">Info</a>
                 </li>
               </ul>
             </div>
