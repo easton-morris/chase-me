@@ -12,7 +12,7 @@ export default class DeleteOptions extends React.Component {
   }
 
   delCardsHandler(event) {
-    fetch(`/api/lists/cardLists/all/${this.props.activeList}`, {
+    fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ export default class DeleteOptions extends React.Component {
   }
 
   delListHandler(event) {
-    fetch(`/api/lists/cardLists/all/${this.props.activeList}`, {
+    fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -45,8 +45,22 @@ export default class DeleteOptions extends React.Component {
           return res.json();
         }
       })
-      .then(newListInfo => {
-        fetch(`/api/lists/lists/${this.props.activeList}`);
+      .then(res => {
+        fetch(`/api/lists/${this.props.activeList}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => {
+            if (!res.ok) {
+              throw new Error('Something went wrong.');
+            } else {
+              window.location.href = '#';
+              return res.json();
+            }
+          })
+          .catch(err => console.error(err));
       })
       .catch(err => console.error(err));
   }

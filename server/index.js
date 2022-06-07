@@ -395,7 +395,7 @@ app.delete('/api/lists/:listId', (req, res, next) => {
   const params = [listId];
   db.query(sql, params)
     .then(result => {
-      if (result.rows) {
+      if (result.rows[0]) {
         throw new ClientError(400, 'List not empty');
       } else {
         const sql = `
