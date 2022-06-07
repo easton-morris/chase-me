@@ -1,16 +1,24 @@
 import React from 'react';
-import ErrorModal from './error-modal';
 
 export default class NewListModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.newListHandler = this.newListHandler.bind(this);
+    this.buttonEnableHandler = this.buttonEnableHandler.bind(this);
 
     this.state = {
       errText: ''
     };
 
+  }
+
+  buttonEnableHandler(event) {
+    if (document.getElementById('newListName').value !== '') {
+      document.getElementById('createListBtn').removeAttribute('disabled');
+    } else {
+      document.getElementById('createListBtn').setAttribute('disabled', '');
+    }
   }
 
   newListHandler(event) {
@@ -23,7 +31,6 @@ export default class NewListModal extends React.Component {
       this.setState({
         errText: 'User not logged in!'
       });
-      // $('#errorModal').modal('toggle');
     } else {
       fetch('/api/lists/new-list', {
         method: 'POST',
@@ -45,10 +52,8 @@ export default class NewListModal extends React.Component {
         .then(newListInfo => {
           newListId = newListInfo.listId;
           document.getElementById('newListName').value = '';
-          document.getElementById('newListModal').className = 'modal fade';
-          document.getElementsByClassName('modal-backdrop fade show')[0].className = 'modal-backdrop fade';
 
-          window.location.href = `#mylists?listId=${newListId}`;
+          window.location.href = `#mylists?userId=${this.props.userId}&listId=${newListId}`;
         })
         .catch(err => console.error(err));
     }
@@ -60,7 +65,6 @@ export default class NewListModal extends React.Component {
   render() {
     return (
       <>
-        <ErrorModal errText={this.state.errText} />
         <div className="modal fade" id="newListModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
           <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
@@ -71,13 +75,13 @@ export default class NewListModal extends React.Component {
               <form onSubmit={this.newListHandler}>
                 <div className="modal-body">
                   <label htmlFor="newListName" className="form-label">List Name</label>
-                  <input type="text" className="form-control" id="newListName" required></input>
+                  <input onChange={this.buttonEnableHandler} type="text" className="form-control" id="newListName" required></input>
                   <div className="invalid-feedback">
                     Please enter a List Name.
                   </div>
                 </div>
                 <div className='modal-footer'>
-                  <button type="submit" className="btn btn-primary">Create List</button>
+                  <button id="createListBtn" type="submit" className="btn btn-primary" data-bs-dismiss="modal" disabled>Create List</button>
                 </div>
               </form>
             </div>

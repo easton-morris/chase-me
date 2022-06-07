@@ -61,30 +61,57 @@ export default class Header extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.lists !== prevState.lists && prevProps !== this.props) {
-      fetch(`/api/lists/${this.state.loggedIn}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
+
+    fetch(`/api/lists/${this.state.loggedIn}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
         }
       })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error('Something went wrong.');
-          } else {
-            return res.json();
-          }
-        })
-        .then(usersLists => {
-          if (usersLists !== prevState.lists) {
-            this.setState({
-              lists: usersLists
-            });
-          }
+      .then(res => {
+        if (res !== prevState.lists && prevProps !== this.props) {
+          this.setState({
+            lists: res
+          });
         }
-        )
-        .catch(err => console.error(err));
-    }
+      })
+      .catch(err => console.error(err));
+
+    // console.log('prevProps', prevProps);
+    // console.log('props', this.props);
+    // console.log('prevState', prevState);
+    // console.log('state', this.state);
+    // if (this.state.lists !== prevState.lists && prevProps !== this.props) {
+    //   fetch(`/api/lists/${this.state.loggedIn}`, {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
+    //     .then(res => {
+    //       if (!res.ok) {
+    //         throw new Error('Something went wrong.');
+    //       } else {
+    //         return res.json();
+    //       }
+    //     })
+    //     .then(usersLists => {
+    //       if (usersLists !== prevState.lists) {
+    //         this.setState({
+    //           lists: usersLists
+    //         });
+    //       }
+    //     }
+    //     )
+    //     .catch(err => console.error(err));
+    // }
   }
 
   render() {
