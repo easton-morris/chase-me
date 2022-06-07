@@ -4,19 +4,51 @@ export default class DeleteOptions extends React.Component {
   constructor(props) {
     super(props);
 
-    this.ConfirmDeleteCardsModal = this.ConfirmDeleteCardsModal.bind(this);
-    this.ConfirmDeleteListModal = this.ConfirmDeleteListModal.bind(this);
     this.delCardsHandler = this.delCardsHandler.bind(this);
     this.delListHandler = this.delListHandler.bind(this);
+    this.ConfirmDeleteCardsModal = this.ConfirmDeleteCardsModal.bind(this);
+    this.ConfirmDeleteListModal = this.ConfirmDeleteListModal.bind(this);
 
   }
 
   delCardsHandler(event) {
-
+    fetch(`/api/lists/cardLists/all/${this.props.activeList}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(newListInfo => {
+        this.props.resetList();
+      })
+      .catch(err => console.error(err));
   }
 
   delListHandler(event) {
-
+    fetch(`/api/lists/cardLists/all/${this.props.activeList}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(newListInfo => {
+        fetch(`/api/lists/lists/${this.props.activeList}`);
+      })
+      .catch(err => console.error(err));
   }
 
   ConfirmDeleteCardsModal() {
@@ -44,7 +76,7 @@ export default class DeleteOptions extends React.Component {
 
   ConfirmDeleteListModal() {
     return (
-      <>
+    <>
       <div className="modal fade" id="confirmDelListModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="confirmDelListModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
@@ -61,22 +93,28 @@ export default class DeleteOptions extends React.Component {
           </div>
         </div>
       </div>
-      </>
+    </>
     );
   }
 
   render() {
     return (
-      <div className="col-8">
-        <div className="container">
-          <div className="card text-center shadow-sm">
-            <div className="card-body">
-              <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
-              <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
+      <>
+        <this.ConfirmDeleteCardsModal/>
+        <this.ConfirmDeleteListModal/>
+        <div className="col-4">
+          <div className="container">
+            <div className="card text-center shadow-sm">
+              <div className="card-body row justify-content-between">
+                <div className='btn-group'>
+                  <button type="button" className="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
+                  <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }
