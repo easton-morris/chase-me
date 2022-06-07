@@ -60,6 +60,30 @@ export default class Header extends React.Component {
     }
   }
 
+  componentDidUpdate(prevState) {
+    fetch(`/api/lists/${this.state.loggedIn}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(usersLists => {
+        if (usersLists !== prevState.lists) {
+          return this.setState({
+            lists: usersLists
+          });
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <header className="mb-5">

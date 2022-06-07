@@ -56,7 +56,7 @@ export default class DeleteOptions extends React.Component {
             if (!res.ok) {
               throw new Error('Something went wrong.');
             } else {
-              window.location.href = '#';
+              window.location.href = `#?userId=${this.props.activeUser}`;
               return res.json();
             }
           })

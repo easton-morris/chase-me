@@ -165,7 +165,7 @@ export default class List extends React.Component {
       <div className="container">
         <div className="row">
             <AddACard />
-            <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            <DeleteOptions activeUser={this.props.activeUser} activeList={this.state.listId} resetList={this.resetList} />
         </div>
             <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
             <ConfirmDelete card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
