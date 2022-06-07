@@ -17,7 +17,7 @@ export default class Header extends React.Component {
   UserListsItem(props) {
     return (
       <li>
-        <a href={`#mylists?listId=${props.value.listId}`}>{props.value.listName}</a>
+        <a className='dropdown-item' href={`#mylists?listId=${props.value.listId}`}>{props.value.listName}</a>
       </li>
     );
   }
@@ -30,7 +30,8 @@ export default class Header extends React.Component {
     return (
       <ul className="dropdown-menu" aria-labelledby="listsDropdown">
         {usersCardListsItems}
-        <li><a data-bs-toggle="modal" data-bs-target="#newListModal">+New List</a></li>
+        <li><hr className="dropdown-divider"></hr></li>
+        <li><button data-bs-toggle="modal" data-bs-target="#newListModal" className="btn-sm btn-outline-dark">+New List</button></li>
       </ul>
     );
   }

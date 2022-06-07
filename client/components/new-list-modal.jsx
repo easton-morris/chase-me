@@ -45,6 +45,9 @@ export default class NewListModal extends React.Component {
         .then(newListInfo => {
           newListId = newListInfo.listId;
           document.getElementById('newListName').value = '';
+          document.getElementById('newListModal').className = 'modal fade';
+          document.getElementsByClassName('modal-backdrop fade show')[0].className = 'modal-backdrop fade';
+
           window.location.href = `#mylists?listId=${newListId}`;
         })
         .catch(err => console.error(err));
@@ -74,7 +77,7 @@ export default class NewListModal extends React.Component {
                   </div>
                 </div>
                 <div className='modal-footer'>
-                  <button type="submit" data-bs-dismiss="modal" className="btn btn-primary">Create List</button>
+                  <button type="submit" className="btn btn-primary">Create List</button>
                 </div>
               </form>
             </div>
