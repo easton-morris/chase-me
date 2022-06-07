@@ -108,6 +108,9 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.activeListId !== this.props.activeListId) {
+      this.setState({
+        listId: this.props.activeListId
+      });
       const activeList = [];
       fetch(`/api/cardLists/${this.props.activeListId}`, {
         method: 'GET',
@@ -149,7 +152,6 @@ export default class List extends React.Component {
               .then(cardRes => {
                 renderList.push(cardRes);
                 this.setState({
-                  listId: this.props.activeListId,
                   list: renderList
                 });
               })

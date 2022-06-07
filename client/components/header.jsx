@@ -60,28 +60,31 @@ export default class Header extends React.Component {
     }
   }
 
-  componentDidUpdate(prevState) {
-    fetch(`/api/lists/${this.state.loggedIn}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Something went wrong.');
-        } else {
-          return res.json();
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.lists !== prevState.lists && prevProps !== this.props) {
+      fetch(`/api/lists/${this.state.loggedIn}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
       })
-      .then(usersLists => {
-        if (usersLists !== prevState.lists) {
-          return this.setState({
-            lists: usersLists
-          });
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Something went wrong.');
+          } else {
+            return res.json();
+          }
+        })
+        .then(usersLists => {
+          if (usersLists !== prevState.lists) {
+            this.setState({
+              lists: usersLists
+            });
+          }
         }
-      })
-      .catch(err => console.error(err));
+        )
+        .catch(err => console.error(err));
+    }
   }
 
   render() {
