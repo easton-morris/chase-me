@@ -4,7 +4,7 @@ export default class AddACard extends React.Component {
 
   render() {
     return (
-      <div className="col-3">
+      <div className="col-4">
         <div className="container">
           <div className="card text-center shadow-sm">
             <div className="card-body">

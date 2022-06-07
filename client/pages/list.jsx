@@ -3,6 +3,7 @@ import AddACard from '../components/add-a-card';
 import SearchModal from '../components/search-modal';
 import CardItems from '../components/card-items';
 import ConfirmDelete from '../components/confirm-delete';
+import DeleteOptions from '../components/delete-options';
 
 export default class List extends React.Component {
   constructor(props) {
@@ -18,6 +19,13 @@ export default class List extends React.Component {
     this.removeCardFromList = this.removeCardFromList.bind(this);
     this.selectCardToRemove = this.selectCardToRemove.bind(this);
     this.closeConfirmation = this.closeConfirmation.bind(this);
+    this.resetList = this.resetList.bind(this);
+  }
+
+  resetList() {
+    this.setState({
+      list: []
+    });
   }
 
   selectCardToRemove(card) {
@@ -100,6 +108,9 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.activeListId !== this.props.activeListId) {
+      this.setState({
+        listId: this.props.activeListId
+      });
       const activeList = [];
       fetch(`/api/cardLists/${this.props.activeListId}`, {
         method: 'GET',
@@ -154,7 +165,10 @@ export default class List extends React.Component {
   render() {
     return (
       <div className="container">
+        <div className="row">
             <AddACard />
+            <DeleteOptions activeUser={this.props.activeUser} activeList={this.state.listId} resetList={this.resetList} />
+        </div>
             <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
             <ConfirmDelete card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
             <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />

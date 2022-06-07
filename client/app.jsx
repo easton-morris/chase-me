@@ -11,7 +11,9 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      // loggedIn: parseRoute(window.location.hash).params.get('userId')
+      loggedIn: 1
     };
   }
 
@@ -31,14 +33,14 @@ export default class App extends React.Component {
       return <Info />;
     } else if (route.path === 'mylists') {
       const listId = route.params.get('listId');
-      return <List activeListId={listId} />;
+      return <List activeUser={this.state.loggedIn} activeListId={listId} />;
     }
   }
 
   render() {
     return (
     <>
-      <Header />
+      <Header activeUser={this.state.loggedIn}/>
       { this.renderPage() }
     </>
     );

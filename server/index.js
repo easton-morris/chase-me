@@ -329,6 +329,110 @@ app.delete('/api/cardLists/:listId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// DELETE>> deletes all cards from the list using the listId //
+
+app.delete('/api/cardLists/all/:listId', (req, res, next) => {
+  const listId = parseInt(req.params.listId, 10);
+
+  if (!Number.isInteger(listId) || listId < 1) {
+    throw new ClientError(400, 'listId must be a positive integer');
+  }
+
+  if (!listId) {
+    throw new ClientError(400, 'listId is required');
+  }
+
+  const sql = `
+    SELECT "cardId"
+    FROM "cardLists"
+    WHERE "listId" = $1
+  `;
+  const params = [listId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows) {
+        throw new ClientError(400, 'List already empty');
+      } else {
+        const sql = `
+          DELETE FROM "cardLists"
+          WHERE "listId" = $1
+          RETURNING *
+        `;
+        const params = [listId];
+        db.query(sql, params)
+          .then(result => {
+            const delItems = result.rows;
+            if (!delItems) {
+              throw new ClientError(400, 'Something went wrong');
+            } else {
+              res.status(200).json(delItems);
+            }
+          })
+          .catch(err => next(err));
+      }
+    })
+    .catch(err => next(err));
+});
+
+// DELETE>> deletes the list using the listId //
+
+app.delete('/api/lists/:listId', (req, res, next) => {
+  const listId = parseInt(req.params.listId, 10);
+
+  if (!Number.isInteger(listId) || listId < 1) {
+    throw new ClientError(400, 'listId must be a positive integer');
+  }
+
+  if (!listId) {
+    throw new ClientError(400, 'listId is required');
+  }
+
+  const sql = `
+    SELECT "cardId"
+    FROM "cardLists"
+    WHERE "listId" = $1
+  `;
+  const params = [listId];
+  db.query(sql, params)
+    .then(result => {
+      if (result.rows[0]) {
+        throw new ClientError(400, 'List not empty');
+      } else {
+        const sql = `
+        SELECT *
+        FROM "lists"
+        WHERE "listId" = $1
+      `;
+        const params = [listId];
+        db.query(sql, params)
+          .then(result => {
+            if (!result.rows) {
+              throw new ClientError(400, 'List doesn\'t exist.');
+            } else {
+              const sql = `
+              DELETE FROM "lists"
+              WHERE "listId" = $1
+              RETURNING *
+            `;
+              const params = [listId];
+              db.query(sql, params)
+                .then(result => {
+                  const delItems = result.rows;
+                  if (!delItems) {
+                    throw new ClientError(400, 'Something went wrong');
+                  } else {
+                    res.status(200).json(delItems);
+                  }
+                })
+                .catch(err => next(err));
+            }
+          })
+          .catch(err => next(err));
+      }
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
