@@ -21,6 +21,8 @@ const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
 
+// GET>> gets all unique card names from the list of cards //
+
 app.get('/api/cards/names', (req, res, next) => {
   const sql = `
     SELECT DISTINCT "cardName"
@@ -42,6 +44,8 @@ app.get('/api/cards/names', (req, res, next) => {
       });
     });
 });
+
+// GET>> gets a sample of cards off of the top of the list of cards //
 
 app.get('/api/cards/sample/:limit', (req, res, next) => {
   const limit = parseInt(req.params.limit, 10);
@@ -75,6 +79,8 @@ app.get('/api/cards/sample/:limit', (req, res, next) => {
     });
 });
 
+// GET>> gets a card by its specific card ID //
+
 app.get('/api/cards/:id', (req, res, next) => {
   const id = req.params.id;
   if (!id) {
@@ -102,6 +108,41 @@ app.get('/api/cards/:id', (req, res, next) => {
     });
 });
 
+// GET>> gets a users lists' info by its specific userId //
+
+app.get('/api/lists/:userId', (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10);
+  if (!userId) {
+    throw new ClientError(400, 'id is required');
+  }
+  if (!Number.isInteger(userId) || userId < 1) {
+    throw new ClientError(400, 'userId must be a positive integer');
+  }
+
+  const sql = `
+    SELECT *
+    FROM "lists"
+    WHERE "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(400, 'user has no lists');
+      } else {
+        res.status(200).json(result.rows);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+// POST>> adds a user and their hashed password to the db //
+
 app.post('/api/users/sign-up', (req, res, next) => {
   const { username, email, password } = req.body;
   if (!username || !password) {
@@ -126,7 +167,9 @@ app.post('/api/users/sign-up', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/lists/:listId', (req, res, next) => {
+// GET>> gets all cards from a list using the listID //
+
+app.get('/api/cardLists/:listId', (req, res, next) => {
   const listId = parseInt(req.params.listId, 10);
 
   if (!Number.isInteger(listId) || listId < 1) {
@@ -154,6 +197,8 @@ app.get('/api/lists/:listId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// POST>> adds a new list to the table along with the userID, listName, and cards sent in the body //
+
 app.post('/api/lists/new-list', (req, res, next) => {
   const { userId, listName } = req.body;
 
@@ -173,6 +218,8 @@ app.post('/api/lists/new-list', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+// PATCH>> adds a card to the list using the listId //
 
 app.patch('/api/cardLists/:listId', (req, res, next) => {
   const { cardId } = req.body;
@@ -226,6 +273,8 @@ app.patch('/api/cardLists/:listId', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+// DELETE>> deletes a card from the list using the cardId and listId //
 
 app.delete('/api/cardLists/:listId', (req, res, next) => {
   const { cardId } = req.body;

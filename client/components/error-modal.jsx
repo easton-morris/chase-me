@@ -12,6 +12,9 @@ export default class ErrorModal extends React.Component {
                 <h2 className="modal-title" id="errorModalLabel">Error!</h2>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              <div className="modal-body">
+                {this.props.errText}
+              </div>
             </div>
           </div>
         </div>

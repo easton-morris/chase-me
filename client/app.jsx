@@ -30,7 +30,8 @@ export default class App extends React.Component {
     } else if (route.path === 'info') {
       return <Info />;
     } else if (route.path === 'mylists') {
-      return <List />;
+      const listId = route.params.get('listId');
+      return <List activeListId={listId} />;
     }
   }
 
