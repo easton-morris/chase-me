@@ -4,7 +4,7 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: null
+      loggedIn: this.props.activeUser
     };
   }
 
@@ -16,7 +16,14 @@ export default class Home extends React.Component {
     return (
       <div className="container">
         <div className="welcomeBox">
-          <img src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
+          <div className='row'>
+            <div id='sycArea' className='col-4 align-items-end'>
+              <img className="img-fluid text-wrap" src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
+            </div>
+            <div id='skidArea' className='col-2'>
+              <img className="img-fluid text-wrap" src="../images/672Skiddo.png" alt="Skiddo" />
+            </div>
+          </div>
           <h1>
             Welcome to Chase.me
           </h1>
@@ -25,8 +32,8 @@ export default class Home extends React.Component {
             for the Pokémon Trading Card Game (TCG). If you aren&apos;t familar, a Chase Card is a card
             that you want to own but don&apos;t.
           </p>
-          <p className={ this.state.loggedInloggedIn ? 'hidden' : ''}>
-            To get started: <a href="#pages?pageId=login">Sign In or Sign Up.</a>
+          <p className={ this.state.loggedIn ? 'd-none' : ''}>
+            To get started: <a href="#login">Sign In or Sign Up.</a>
           </p>
         </div>
       </div>

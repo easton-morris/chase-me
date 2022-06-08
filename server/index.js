@@ -133,12 +133,40 @@ app.get('/api/lists/:userId', (req, res, next) => {
         res.status(200).json(result.rows);
       }
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
+    .catch(err => next(err));
+});
+
+// GET>> checks a user's password to make sure it matches before signing in
+
+app.get('/api/users/sign-in', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+
+  const sql = `
+    SELECT *
+    FROM "users"
+    WHERE "username" = $1
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(400, 'username does not exist');
+      } else {
+        argon2.verify(result.rows[0].hashPw, password)
+          .then(result => {
+            if (result) {
+              res.sendStatus(200);
+            } else {
+              res.sendStatus(400);
+            }
+          })
+          .catch(err => next(err));
+      }
+    })
+    .catch(err => next(err));
 });
 
 // POST>> adds a user and their hashed password to the db //
@@ -149,22 +177,37 @@ app.post('/api/users/sign-up', (req, res, next) => {
     throw new ClientError(400, 'username and password are required fields');
   }
 
-  argon2.hash(password)
-    .then(hashedPW => {
-      const sql = `
-       INSERT INTO "users" ("username", "email", "hashPw")
-       VALUES ($1, $2, $3)
-       RETURNING *
-      `;
-      const params = [username, email, hashedPW];
-      db.query(sql, params)
-        .then(result => {
-          const [newSignUp] = result.rows;
-          res.status(201).json(newSignUp);
-        })
-        .catch(err => next(err));
+  const sql = `
+    SELECT *
+    FROM "users"
+    WHERE "username" = $1
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      if (result.rows[0]) {
+        throw new ClientError(409, 'username already exists');
+      } else {
+        argon2.hash(password)
+          .then(hashedPW => {
+            const sql = `
+             INSERT INTO "users" ("username", "email", "hashPw")
+             VALUES ($1, $2, $3)
+             RETURNING *
+            `;
+            const params = [username, email, hashedPW];
+            db.query(sql, params)
+              .then(result => {
+                const [newSignUp] = result.rows;
+                res.status(201).json(newSignUp);
+              })
+              .catch(err => next(err));
+          })
+          .catch(err => next(err));
+      }
     })
     .catch(err => next(err));
+
 });
 
 // GET>> gets all cards from a list using the listID //
