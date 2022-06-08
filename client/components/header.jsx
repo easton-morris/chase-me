@@ -70,6 +70,12 @@ export default class Header extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
+          if (res !== prevState.lists && prevProps !== this.props) {
+            this.setState({
+              lists: [],
+              loggedIn: this.props.activeUser
+            });
+          }
           throw new Error('Something went wrong.');
         } else {
           return res.json();
