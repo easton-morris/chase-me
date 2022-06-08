@@ -11,11 +11,19 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.updateUser = this.updateUser.bind(this);
+
     this.state = {
       route: parseRoute(window.location.hash),
       // loggedIn: parseRoute(window.location.hash).params.get('userId')
       loggedIn: 1
     };
+  }
+
+  updateUser(userId) {
+    this.setState({
+      loggedIn: userId
+    });
   }
 
   componentDidMount() {
@@ -36,7 +44,7 @@ export default class App extends React.Component {
       const listId = route.params.get('listId');
       return <List activeUser={this.state.loggedIn} activeListId={listId} />;
     } else if (route.path === 'login') {
-      return <Login activeUser={this.state.loggedIn}/>;
+      return <Login updateUser={this.updateUser} activeUser={this.state.loggedIn}/>;
     }
   }
 

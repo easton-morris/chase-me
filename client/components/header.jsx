@@ -62,7 +62,7 @@ export default class Header extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
 
-    fetch(`/api/lists/${this.state.loggedIn}`, {
+    fetch(`/api/lists/${this.props.activeUser}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -78,40 +78,12 @@ export default class Header extends React.Component {
       .then(res => {
         if (res !== prevState.lists && prevProps !== this.props) {
           this.setState({
-            lists: res
+            lists: res,
+            loggedIn: this.props.activeUser
           });
         }
       })
       .catch(err => console.error(err));
-
-    // console.log('prevProps', prevProps);
-    // console.log('props', this.props);
-    // console.log('prevState', prevState);
-    // console.log('state', this.state);
-    // if (this.state.lists !== prevState.lists && prevProps !== this.props) {
-    //   fetch(`/api/lists/${this.state.loggedIn}`, {
-    //     method: 'GET',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   })
-    //     .then(res => {
-    //       if (!res.ok) {
-    //         throw new Error('Something went wrong.');
-    //       } else {
-    //         return res.json();
-    //       }
-    //     })
-    //     .then(usersLists => {
-    //       if (usersLists !== prevState.lists) {
-    //         this.setState({
-    //           lists: usersLists
-    //         });
-    //       }
-    //     }
-    //     )
-    //     .catch(err => console.error(err));
-    // }
   }
 
   render() {

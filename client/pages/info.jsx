@@ -6,8 +6,8 @@ export default class Info extends React.Component {
     return (
         <div className="container">
           <div className="welcomeBox">
-          <div className='row'>
-            <div id='sycArea' className='col-4 align-items-end'>
+          <div className='row align-items-end'>
+            <div id='sycArea' className='col-4'>
               <img className="img-fluid text-wrap" src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
             </div>
             <div id='skidArea' className='col-2'>

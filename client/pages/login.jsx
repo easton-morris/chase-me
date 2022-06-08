@@ -15,9 +15,11 @@ export default class Login extends React.Component {
   signinHandler(event) {
     const $username = document.getElementById('inputUNSignin');
     const $password = document.getElementById('inputPWSignin');
+    const $signinUNWarn = document.getElementById('signinUNWarn');
+    const $signinPWWarn = document.getElementById('signinPWWarn');
 
     fetch('/api/users/sign-in', {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -27,20 +29,52 @@ export default class Login extends React.Component {
       })
     })
       .then(res => {
-        if (res === 400) {
-          $username.className();
-        } else {
-          return res.json();
+        if (res.status === 404) {
+          $signinUNWarn.className = 'alert alert-danger d-none';
+          $signinPWWarn.className = 'alert alert-danger d-none';
+
+          $signinUNWarn.className = 'alert alert-danger';
+        } else if (res.status === 400) {
+          $signinUNWarn.className = 'alert alert-danger d-none';
+          $signinPWWarn.className = 'alert alert-danger d-none';
+
+          $signinPWWarn.className = 'alert alert-danger';
+        } else if (res.status === 200) {
+          this.props.updateUser(res.statusText);
+          window.location.href = `#?userId=${res.statusText}`;
         }
-      });
+      })
+      .catch(err => console.error(err));
 
     event.preventDefault();
   }
 
   signupHandler(event) {
-    // const $username = document.getElementById('inputUNSignin').value;
-    // const $email = document.getElementById('inputEmailSignup').value;
-    // const $password = document.getElementById('inputPWSignin').value;
+    const $username = document.getElementById('inputUNSignup');
+    const $email = document.getElementById('inputEmailSignup');
+    const $password = document.getElementById('inputPWSignup');
+    const $signupUNWarn = document.getElementById('signupUNWarn');
+
+    fetch('/api/users/sign-up', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: $username.value,
+        email: $email.value,
+        password: $password.value
+      })
+    })
+      .then(res => {
+        if (res.status === 500) {
+          $signupUNWarn.className = 'alert alert-danger';
+        } else {
+          this.props.updateUser(res.body.userId);
+          window.location.href = `#home?userId=${res.body.userId}`;
+        }
+      })
+      .catch(err => console.error(err));
 
     event.preventDefault();
   }
@@ -63,30 +97,36 @@ export default class Login extends React.Component {
           <hr />
           <div>
             <h2>Sign In</h2>
-            <form id='signin'>
+            <form onSubmit={this.signinHandler} id='signin'>
               <div className="mb-3">
                 <label htmlFor="inputUNSignin" className="form-label">Username</label>
                 <input type="text" className="form-control" id="inputUNSignin" aria-describedby="signinHelp" required></input>
                 <div id="signinHelp" className="form-text">Please enter your username.</div>
-                <div className="alert alert-danger d-none">
+                <div id="signinUNWarn" className="alert alert-danger d-none">
                   Username does not exist.
                 </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="inputPWSignin" className="form-label">Password</label>
                 <input type="password" className="form-control" id="inputPWSignin" required></input>
+                <div id="signinPWWarn" className="alert alert-danger d-none">
+                  Password does not match.
+                </div>
               </div>
-              <button onSubmit={this.signinHandler} type="submit" className="btn btn-primary">Sign In</button>
+              <button type="submit" form='signin' className="btn btn-primary">Sign In</button>
             </form>
           </div>
           <hr />
           <div>
             <h2>Sign Up</h2>
-            <form id='signup'>
+            <form onSubmit={this.signupHandler} id='signup'>
               <div className="mb-3">
                 <label htmlFor="inputUNSignup" className="form-label">Username</label>
                 <input type="text" className="form-control" id="inputUNSignup" aria-describedby="signupHelp" required></input>
                 <div id="signupHelp" className="form-text">Please enter your desired username.</div>
+                <div id="signupUNWarn" className="alert alert-danger d-none">
+                  Username already exists.
+                </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="inputEmailSignup" className="form-label">Email address</label>
@@ -94,10 +134,10 @@ export default class Login extends React.Component {
                 <div id="emailHelp" className="form-text">We&apos;ll never share your email with anyone else.</div>
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                <input type="password" className="form-control" id="exampleInputPassword1" required></input>
+                <label htmlFor="inputPWSignup" className="form-label">Password</label>
+                <input type="password" className="form-control" id="inputPWSignup" required></input>
               </div>
-              <button onSubmit={this.signupHandler} type="submit" className="btn btn-primary">Sign Up</button>
+              <button type="submit" form='signup' className="btn btn-primary">Sign Up</button>
             </form>
           </div>
         </div>

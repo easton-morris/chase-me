@@ -136,9 +136,10 @@ app.get('/api/lists/:userId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// GET>> checks a user's password to make sure it matches before signing in
+// PATCH>> checks a user's password to make sure it matches before signing in
 
-app.get('/api/users/sign-in', (req, res, next) => {
+app.patch('/api/users/sign-in', (req, res, next) => {
+  let userId = null;
   const { username, password } = req.body;
   if (!username || !password) {
     throw new ClientError(400, 'username and password are required fields');
@@ -153,11 +154,13 @@ app.get('/api/users/sign-in', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       if (!result.rows[0]) {
-        throw new ClientError(400, 'username does not exist');
+        throw new ClientError(404, 'username does not exist');
       } else {
+        userId = result.rows[0].userId;
         argon2.verify(result.rows[0].hashPw, password)
           .then(result => {
             if (result) {
+              res.statusMessage = userId;
               res.sendStatus(200);
             } else {
               res.sendStatus(400);
