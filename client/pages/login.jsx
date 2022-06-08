@@ -70,9 +70,13 @@ export default class Login extends React.Component {
         if (res.status === 500) {
           $signupUNWarn.className = 'alert alert-danger';
         } else {
-          this.props.updateUser(res.body.userId);
-          window.location.href = `#home?userId=${res.body.userId}`;
+          return res.json();
         }
+      })
+      .then(newUser => {
+        const newUserId = newUser.userId;
+        this.props.updateUser(newUserId);
+        window.location.href = `#?userId=${newUserId}`;
       })
       .catch(err => console.error(err));
 
