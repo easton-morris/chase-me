@@ -62,34 +62,37 @@ export default class Header extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
 
-    fetch(`/api/lists/${this.props.activeUser}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (!res.ok) {
+    if (this.props.activeUser) {
+      fetch(`/api/lists/${this.props.activeUser}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (!res.ok) {
+            if (res !== prevState.lists && prevProps !== this.props) {
+              this.setState({
+                lists: [],
+                loggedIn: this.props.activeUser
+              });
+            }
+            throw new Error('Something went wrong.');
+          } else {
+            return res.json();
+          }
+        })
+        .then(res => {
           if (res !== prevState.lists && prevProps !== this.props) {
             this.setState({
-              lists: [],
+              lists: res,
               loggedIn: this.props.activeUser
             });
           }
-          throw new Error('Something went wrong.');
-        } else {
-          return res.json();
-        }
-      })
-      .then(res => {
-        if (res !== prevState.lists && prevProps !== this.props) {
-          this.setState({
-            lists: res,
-            loggedIn: this.props.activeUser
-          });
-        }
-      })
-      .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+
   }
 
   render() {
@@ -107,11 +110,14 @@ export default class Header extends React.Component {
             <div className="collapse navbar-collapse" id="navbarToggler">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
+                  <a className={this.state.loggedIn ? 'nav-link dropdown-toggle' : 'nav-link dropdown-toggle d-none'} id="listsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Lists</a>
                   <this.UserLists />
                 </li>
                 <li className="nav-item">
                   <a href={`#info?userId=${this.state.loggedIn}`} className="nav-link">Info</a>
+                </li>
+                <li className={this.state.loggedIn ? 'nav-item ' : 'nav-item d-none'}>
+                  <a onClick={() => this.props.updateUser(null)} href={`#?userId=${null}`} className="nav-link">Logout</a>
                 </li>
               </ul>
             </div>

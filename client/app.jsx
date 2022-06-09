@@ -15,8 +15,7 @@ export default class App extends React.Component {
 
     this.state = {
       route: parseRoute(window.location.hash),
-      // loggedIn: parseRoute(window.location.hash).params.get('userId')
-      loggedIn: 1
+      loggedIn: parseRoute(window.location.hash).params.get('userId')
     };
   }
 
@@ -51,7 +50,7 @@ export default class App extends React.Component {
   render() {
     return (
     <>
-      <Header activeUser={this.state.loggedIn}/>
+      <Header updateUser={this.updateUser} activeUser={this.state.loggedIn}/>
       { this.renderPage() }
     </>
     );
