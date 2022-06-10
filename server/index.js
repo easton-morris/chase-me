@@ -49,9 +49,9 @@ app.patch('/api/users/sign-in', (req, res, next) => {
             if (!result) {
               throw new ClientError(401, 'invlaid login');
             }
-            const payload = { userId, ts: Date.now() };
+            const payload = { userId, username, ts: Date.now() };
             const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-            res.json({ token, userId: payload });
+            res.json({ token, user: payload });
           })
           .catch(err => next(err));
       }
@@ -89,7 +89,11 @@ app.post('/api/users/sign-up', (req, res, next) => {
             db.query(sql, params)
               .then(result => {
                 const [newSignUp] = result.rows;
-                res.status(201).json(newSignUp);
+                const newUserId = newSignUp.userId;
+
+                const payload = { newUserId, username, ts: Date.now() };
+                const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+                res.status(201).json({ token, user: payload, newSignUp });
               })
               .catch(err => next(err));
           })

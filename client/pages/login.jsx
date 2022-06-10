@@ -33,9 +33,19 @@ export default class Login extends React.Component {
 
           $signinPWWarn.className = 'alert alert-danger';
         } else if (res.status === 200) {
-          this.props.updateUser(res.statusText);
-          window.location.href = `#?userId=${res.statusText}`;
+          return res.json();
         }
+      })
+      .then(response => {
+        const newUser = response.user;
+        const currentUser = window.localStorage.getItem('currentUser');
+        if (currentUser) {
+          window.localStorage.removeItem('currentUser');
+        }
+        window.localStorage.setItem('currentUser', JSON.stringify(response));
+
+        this.props.updateUser(newUser.userId);
+        window.location.href = `#?userId=${newUser.userId}`;
       })
       .catch(err => console.error(err));
 
@@ -68,6 +78,12 @@ export default class Login extends React.Component {
       })
       .then(newUser => {
         const newUserId = newUser.userId;
+        const currentUser = window.localStorage.getItem('currentUser');
+        if (currentUser) {
+          window.localStorage.removeItem('currentUser');
+        }
+        window.localStorage.setItem('currentUser', JSON.stringify(newUser));
+
         this.props.updateUser(newUserId);
         window.location.href = `#?userId=${newUserId}`;
       })
