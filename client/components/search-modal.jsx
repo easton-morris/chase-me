@@ -26,6 +26,8 @@ export default class SearchModal extends React.Component {
   }
 
   cardSelectHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     const $thList = document.querySelectorAll('th');
     for (let jj = 0; jj < $thList.length; jj++) {
       $thList[jj].className = '';
@@ -36,7 +38,8 @@ export default class SearchModal extends React.Component {
     fetch(`/api/cards/${event.target.textContent}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
       }
     })
       .then(result => {
@@ -90,11 +93,14 @@ export default class SearchModal extends React.Component {
   }
 
   addCardHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     const listId = this.props.activeList;
     fetch(`/api/cardLists/${listId}`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
       },
       body: JSON.stringify({
         cardId: this.state.cardToAdd.cardId
@@ -130,7 +136,15 @@ export default class SearchModal extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/cards/names')
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
+    fetch('/api/cards/names', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
+      }
+    })
       .then(res => {
         if (!res.ok) {
           throw new Error('Something went wrong.');
@@ -145,7 +159,13 @@ export default class SearchModal extends React.Component {
       })
       .catch(err => console.error(err));
 
-    fetch('/api/cards/sample/10')
+    fetch('/api/cards/sample/10', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
+      }
+    })
       .then(res => {
         if (!res.ok) {
           throw new Error('Something went wrong.');

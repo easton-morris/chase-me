@@ -12,10 +12,13 @@ export default class DeleteOptions extends React.Component {
   }
 
   delCardsHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
       }
     })
       .then(res => {
@@ -32,10 +35,13 @@ export default class DeleteOptions extends React.Component {
   }
 
   delListHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': userToken
       }
     })
       .then(res => {

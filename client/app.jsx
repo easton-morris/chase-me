@@ -15,7 +15,8 @@ export default class App extends React.Component {
 
     this.state = {
       route: parseRoute(window.location.hash),
-      loggedIn: parseRoute(window.location.hash).params.get('userId')
+      loggedIn: JSON.parse(window.localStorage.getItem('currentUser')).user.userId,
+      userToken: JSON.parse(window.localStorage.getItem('currentUser')).token
     };
   }
 

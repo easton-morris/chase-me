@@ -1,7 +1,5 @@
 import React from 'react';
 import NewListModal from './new-list-modal';
-
-const userToken = JSON.parse(window.localStorage.getItem('currentUser')).token;
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +36,8 @@ export default class Header extends React.Component {
   }
 
   componentDidMount() {
-
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     if (this.state.loggedIn) {
       fetch(`/api/lists/${this.state.loggedIn}`, {
         method: 'GET',
@@ -64,7 +63,8 @@ export default class Header extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     if (this.props.activeUser) {
       fetch(`/api/lists/${this.props.activeUser}`, {
         method: 'GET',

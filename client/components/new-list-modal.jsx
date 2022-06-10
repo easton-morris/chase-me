@@ -27,6 +27,8 @@ export default class NewListModal extends React.Component {
     const currUserId = this.props.userId;
     let newListId = 7;
 
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const userToken = currUser.token;
     if (!currUserId) {
       this.setState({
         errText: 'User not logged in!'
@@ -35,7 +37,8 @@ export default class NewListModal extends React.Component {
       fetch('/api/lists/new-list', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-access-token': userToken
         },
         body: JSON.stringify({
           userId: currUserId,
