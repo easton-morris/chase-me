@@ -7,10 +7,6 @@ export default class NewListModal extends React.Component {
     this.newListHandler = this.newListHandler.bind(this);
     this.buttonEnableHandler = this.buttonEnableHandler.bind(this);
 
-    this.state = {
-      errText: ''
-    };
-
   }
 
   buttonEnableHandler(event) {
@@ -22,23 +18,18 @@ export default class NewListModal extends React.Component {
   }
 
   newListHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
 
     const $newListName = document.getElementById('newListName').value;
-    const currUserId = this.props.userId;
-    let newListId = 7;
+    const currUserId = currUser.user.userId;
+    let newListId = null;
 
-    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
-    if (!currUserId) {
-      this.setState({
-        errText: 'User not logged in!'
-      });
-    } else {
+    if (currUserId) {
       fetch('/api/lists/new-list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': userToken
+          'x-access-token': currUser.token
         },
         body: JSON.stringify({
           userId: currUserId,
@@ -56,7 +47,7 @@ export default class NewListModal extends React.Component {
           newListId = newListInfo.listId;
           document.getElementById('newListName').value = '';
 
-          window.location.href = `#mylists?userId=${this.props.userId}&listId=${newListId}`;
+          window.location.href = `#mylists?&listId=${newListId}`;
         })
         .catch(err => console.error(err));
     }

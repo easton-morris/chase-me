@@ -57,13 +57,12 @@ export default class List extends React.Component {
 
   componentDidMount() {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
     const activeList = [];
     fetch(`/api/cardLists/${this.state.listId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': userToken
+        'x-access-token': currUser.token
       }
     })
       .then(res => {
@@ -92,7 +91,7 @@ export default class List extends React.Component {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'x-access-token': userToken
+              'x-access-token': currUser.token
             }
           })
             .then(res => {
@@ -112,7 +111,6 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
     if (prevProps.activeListId !== this.props.activeListId) {
       this.setState({
         listId: this.props.activeListId
@@ -122,7 +120,7 @@ export default class List extends React.Component {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': userToken
+          'x-access-token': currUser.token
         }
       })
         .then(res => {
@@ -151,7 +149,7 @@ export default class List extends React.Component {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                'x-access-token': userToken
+                'x-access-token': currUser.token
               }
             })
               .then(res => {
@@ -175,10 +173,10 @@ export default class List extends React.Component {
       <div className="container">
         <div className="row">
             <AddACard />
-            <DeleteOptions activeUser={this.props.activeUser} activeList={this.state.listId} resetList={this.resetList} />
+            <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
         </div>
             <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
-            <ConfirmDelete card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+            <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
             <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
       </div>
     );

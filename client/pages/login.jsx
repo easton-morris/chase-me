@@ -7,9 +7,6 @@ export default class Login extends React.Component {
     this.signinHandler = this.signinHandler.bind(this);
     this.signupHandler = this.signupHandler.bind(this);
 
-    this.state = {
-      loggedIn: this.props.activeUser
-    };
   }
 
   signinHandler(event) {
@@ -37,15 +34,13 @@ export default class Login extends React.Component {
         }
       })
       .then(response => {
-        const newUser = response.user;
         const currentUser = window.localStorage.getItem('currentUser');
         if (currentUser) {
           window.localStorage.removeItem('currentUser');
         }
         window.localStorage.setItem('currentUser', JSON.stringify(response));
 
-        this.props.updateUser(newUser.userId);
-        window.location.href = `#?userId=${newUser.userId}`;
+        window.location.href = '#?user=signin';
       })
       .catch(err => console.error(err));
 
@@ -77,15 +72,13 @@ export default class Login extends React.Component {
         }
       })
       .then(newUser => {
-        const newUserId = newUser.userId;
         const currentUser = window.localStorage.getItem('currentUser');
         if (currentUser) {
           window.localStorage.removeItem('currentUser');
         }
         window.localStorage.setItem('currentUser', JSON.stringify(newUser));
 
-        this.props.updateUser(newUserId);
-        window.location.href = `#?userId=${newUserId}`;
+        window.location.href = '#?user=signup';
       })
       .catch(err => console.error(err));
 

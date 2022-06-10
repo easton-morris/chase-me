@@ -27,7 +27,6 @@ export default class SearchModal extends React.Component {
 
   cardSelectHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
     const $thList = document.querySelectorAll('th');
     for (let jj = 0; jj < $thList.length; jj++) {
       $thList[jj].className = '';
@@ -39,7 +38,7 @@ export default class SearchModal extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': userToken
+        'x-access-token': currUser.token
       }
     })
       .then(result => {
@@ -94,13 +93,12 @@ export default class SearchModal extends React.Component {
 
   addCardHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
     const listId = this.props.activeList;
     fetch(`/api/cardLists/${listId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': userToken
+        'x-access-token': currUser.token
       },
       body: JSON.stringify({
         cardId: this.state.cardToAdd.cardId
@@ -137,12 +135,11 @@ export default class SearchModal extends React.Component {
 
   componentDidMount() {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    const userToken = currUser.token;
     fetch('/api/cards/names', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': userToken
+        'x-access-token': currUser.token
       }
     })
       .then(res => {
@@ -163,7 +160,7 @@ export default class SearchModal extends React.Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': userToken
+        'x-access-token': currUser.token
       }
     })
       .then(res => {

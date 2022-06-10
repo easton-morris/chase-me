@@ -41,7 +41,7 @@ app.patch('/api/users/sign-in', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       if (!result.rows[0]) {
-        throw new ClientError(401, 'invlaid login');
+        throw new ClientError(401, 'invalid login');
       } else {
         userId = result.rows[0].userId;
         argon2.verify(result.rows[0].hashPw, password)

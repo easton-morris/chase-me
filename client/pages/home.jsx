@@ -1,18 +1,9 @@
 import React from 'react';
 
 export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: this.props.activeUser
-    };
-  }
-
-  componentDidMount() {
-
-  }
 
   render() {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     return (
       <div className="container">
         <div className="welcomeBox">
@@ -32,7 +23,7 @@ export default class Home extends React.Component {
             for the Pokémon Trading Card Game (TCG). If you aren&apos;t familar, a Chase Card is a card
             that you want to own but don&apos;t.
           </p>
-          <p className={ this.state.loggedIn ? 'd-none' : ''}>
+          <p className={ currUser ? 'd-none' : ''}>
             To get started: <a href="#login">Sign In or Sign Up.</a>
           </p>
         </div>

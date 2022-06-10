@@ -11,19 +11,15 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.updateUser = this.updateUser.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
 
     this.state = {
-      route: parseRoute(window.location.hash),
-      loggedIn: JSON.parse(window.localStorage.getItem('currentUser')).user.userId,
-      userToken: JSON.parse(window.localStorage.getItem('currentUser')).token
+      route: parseRoute(window.location.hash)
     };
   }
 
-  updateUser(userId) {
-    this.setState({
-      loggedIn: userId
-    });
+  logoutUser() {
+    window.localStorage.removeItem('currentUser');
   }
 
   componentDidMount() {
@@ -37,21 +33,21 @@ export default class App extends React.Component {
   renderPage() {
     const { route } = this.state;
     if (route.path === '') {
-      return <Home activeUser={this.state.loggedIn}/>;
+      return <Home />;
     } else if (route.path === 'info') {
-      return <Info activeUser={this.state.loggedIn}/>;
+      return <Info />;
     } else if (route.path === 'mylists') {
       const listId = route.params.get('listId');
-      return <List activeUser={this.state.loggedIn} activeListId={listId} />;
+      return <List activeListId={listId} />;
     } else if (route.path === 'login') {
-      return <Login updateUser={this.updateUser} activeUser={this.state.loggedIn}/>;
+      return <Login />;
     }
   }
 
   render() {
     return (
     <>
-      <Header updateUser={this.updateUser} activeUser={this.state.loggedIn}/>
+      <Header logoutUser={this.logoutUser} />
       { this.renderPage() }
     </>
     );
