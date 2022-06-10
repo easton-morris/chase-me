@@ -15,7 +15,6 @@ export default class Login extends React.Component {
   signinHandler(event) {
     const $username = document.getElementById('inputUNSignin');
     const $password = document.getElementById('inputPWSignin');
-    const $signinUNWarn = document.getElementById('signinUNWarn');
     const $signinPWWarn = document.getElementById('signinPWWarn');
 
     fetch('/api/users/sign-in', {
@@ -29,13 +28,7 @@ export default class Login extends React.Component {
       })
     })
       .then(res => {
-        if (res.status === 404) {
-          $signinUNWarn.className = 'alert alert-danger d-none';
-          $signinPWWarn.className = 'alert alert-danger d-none';
-
-          $signinUNWarn.className = 'alert alert-danger';
-        } else if (res.status === 400) {
-          $signinUNWarn.className = 'alert alert-danger d-none';
+        if (res.status === 401) {
           $signinPWWarn.className = 'alert alert-danger d-none';
 
           $signinPWWarn.className = 'alert alert-danger';
@@ -106,15 +99,12 @@ export default class Login extends React.Component {
                 <label htmlFor="inputUNSignin" className="form-label">Username</label>
                 <input type="text" className="form-control" id="inputUNSignin" aria-describedby="signinHelp" required></input>
                 <div id="signinHelp" className="form-text">Please enter your username.</div>
-                <div id="signinUNWarn" className="alert alert-danger d-none">
-                  Username does not exist.
-                </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="inputPWSignin" className="form-label">Password</label>
                 <input type="password" className="form-control" id="inputPWSignin" required></input>
                 <div id="signinPWWarn" className="alert alert-danger d-none">
-                  Password does not match.
+                  Password or username is incorrect.
                 </div>
               </div>
               <button type="submit" form='signin' className="btn btn-primary">Sign In</button>
