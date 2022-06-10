@@ -38,6 +38,7 @@ export default class Header extends React.Component {
   }
 
   componentDidMount() {
+
     if (this.state.loggedIn) {
       fetch(`/api/lists/${this.state.loggedIn}`, {
         method: 'GET',

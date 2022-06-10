@@ -8,7 +8,7 @@ function authorizationMiddleware(req, res, next) {
     throw new ClientError(401, 'authentication required');
   }
 
-  const decoded = jwt.verify(xToken.value, process.env.TOKEN_SECRET);
+  const decoded = jwt.verify(xToken, process.env.TOKEN_SECRET);
   req.user = decoded;
   next();
 
