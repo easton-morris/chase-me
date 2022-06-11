@@ -26,7 +26,7 @@ export default class Header extends React.Component {
       <this.UserListsItem key={list.listId} value={list} />
     );
     return (
-      <ul className="dropdown-menu" aria-labelledby="listsDropdown">
+      <ul className="p-2 dropdown-menu" aria-labelledby="listsDropdown">
         {usersCardListsItems}
         <li><hr className="dropdown-divider"></hr></li>
         <li><button data-bs-toggle="modal" data-bs-target="#newListModal" className="btn-sm btn-outline-dark">+New List</button></li>
