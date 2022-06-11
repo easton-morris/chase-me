@@ -62,7 +62,7 @@ export default class Header extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    if (currUser && prevState !== this.state) {
+    if (currUser) {
       fetch(`/api/lists/${currUser.user.userId}`, {
         method: 'GET',
         headers: {
@@ -72,18 +72,13 @@ export default class Header extends React.Component {
       })
         .then(res => {
           if (!res.ok) {
-            if (res !== prevState.lists && prevProps !== this.props) {
-              this.setState({
-                lists: []
-              });
-            }
             throw new Error('Something went wrong.');
           } else {
             return res.json();
           }
         })
         .then(res => {
-          if (res !== prevState.lists && prevProps !== this.props) {
+          if (res !== prevState.lists) {
             this.setState({
               lists: res
             });
