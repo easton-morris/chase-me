@@ -194,7 +194,7 @@ export default class SearchModal extends React.Component {
                   <h4>Search by Name</h4>
                   <div className="search-area">
                     <form action="" onSubmit={this.searchHandler}>
-                        <label htmlFor="cardSearch" className="form-label">...then select an ID and click &#34;Add Card&#34;</label>
+                        <label htmlFor="cardSearch" className="form-label">...then click on an ID and click &#34;Add Card&#34;</label>
                       <div className="row">
                         <div className="col-auto">
                           <input className="form-control" list="nameList" id="cardSearch" placeholder="Jolteon"/>

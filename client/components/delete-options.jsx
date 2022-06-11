@@ -120,14 +120,12 @@ export default class DeleteOptions extends React.Component {
       <>
         <this.ConfirmDeleteCardsModal/>
         <this.ConfirmDeleteListModal/>
-        <div className="col-4">
-          <div className="container">
-            <div className="card text-center shadow-sm">
-              <div className="card-body row justify-content-between">
-                <div className='btn-group'>
-                  <button type="button" className="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
-                  <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
-                </div>
+        <div className="col-md-4">
+          <div className="card text-center shadow-sm">
+            <div className="card-body">
+              <div className='btn-group'>
+                <button type="button" className="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
+                <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
               </div>
             </div>
           </div>

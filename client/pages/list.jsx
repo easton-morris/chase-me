@@ -170,15 +170,24 @@ export default class List extends React.Component {
 
   render() {
     return (
+      <>
+      <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+      <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
       <div className="container">
-        <div className="row">
+        <div className="row g-4 justify-content-center">
+          <h1>{this.props.listName}</h1>
+        </div>
+        <hr />
+        <div className="row g-4">
             <AddACard />
             <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
         </div>
-            <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
-            <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+        <hr />
+        <div className="row g-4">
             <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
+        </div>
       </div>
+      </>
     );
   }
 }

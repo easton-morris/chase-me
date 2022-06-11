@@ -15,7 +15,7 @@ export default class Header extends React.Component {
   UserListsItem(props) {
     return (
       <li>
-        <a className='dropdown-item' href={`#mylists?listId=${props.value.listId}`}>{props.value.listName}</a>
+        <a className='dropdown-item' href={`#mylists?listId=${props.value.listId}&listName=${props.value.listName}`}>{props.value.listName}</a>
       </li>
     );
   }
@@ -78,9 +78,10 @@ export default class Header extends React.Component {
           }
         })
         .then(res => {
-          if (res !== prevState.lists) {
+          const newLists = res;
+          if (res !== this.state.lists && prevProps !== this.props) {
             this.setState({
-              lists: res
+              lists: newLists
             });
           }
         })
@@ -112,7 +113,7 @@ export default class Header extends React.Component {
                   <a href={'#info'} className="nav-link">Info</a>
                 </li>
                 <li className={currUser ? 'nav-item ' : 'nav-item d-none'}>
-                  <a onClick={() => this.props.logoutUser()} href={'#?user=logout'} className="nav-link">Logout</a>
+                  <a onClick={this.props.logoutUser} href={'#?user=logout'} className="nav-link">Logout</a>
                 </li>
               </ul>
             </div>

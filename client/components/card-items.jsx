@@ -20,21 +20,21 @@ export default class CardItems extends React.Component {
   CardItem(props) {
     const obj = props.fullCard;
     return (
-      <div className="col-4">
+      <div className="col-md-4">
         <div className="container">
           <div className="card shadow-sm">
             <h4 className="card-title">{props.cardName}</h4>
             <h5 className="card-subtitle mb-2 text-muted">{props.setName}</h5>
             <img className="img-thumbnail" src={props.cardImg} alt={props.cardName} />
             <div className="card-body">
-              <p className="card-text">{props.cardId}</p>
-              <div className="row justify-content-end">
-                <div className="btn-group col-4">
+              <p className="card-text"><strong>Card ID:</strong> {props.cardId}</p>
+            </div>
+            <div className="card-footer">
+              <div className="row">
+                <div className="col-sm-4">
                   <button onClick={() => this.removeHandler(obj)} className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelModal">Remove</button>
                 </div>
               </div>
-            </div>
-            <div className="card-footer">
             </div>
           </div>
         </div>
@@ -58,11 +58,7 @@ export default class CardItems extends React.Component {
   render() {
     if (this.props.list.length > 0) {
       return (
-        <div className="container">
-          <div className="row g-4">
             <this.CardItemsBody />
-          </div>
-        </div>
       );
     } else {
       return null;
