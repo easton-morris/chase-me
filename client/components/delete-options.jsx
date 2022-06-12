@@ -12,10 +12,12 @@ export default class DeleteOptions extends React.Component {
   }
 
   delCardsHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
       }
     })
       .then(res => {
@@ -32,10 +34,12 @@ export default class DeleteOptions extends React.Component {
   }
 
   delListHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     fetch(`/api/cardLists/all/${this.props.activeList}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
       }
     })
       .then(res => {
@@ -56,7 +60,7 @@ export default class DeleteOptions extends React.Component {
             if (!res.ok) {
               throw new Error('Something went wrong.');
             } else {
-              window.location.href = `#?userId=${this.props.activeUser}`;
+              window.location.href = '#';
               return res.json();
             }
           })
@@ -116,14 +120,12 @@ export default class DeleteOptions extends React.Component {
       <>
         <this.ConfirmDeleteCardsModal/>
         <this.ConfirmDeleteListModal/>
-        <div className="col-4">
-          <div className="container">
-            <div className="card text-center shadow-sm">
-              <div className="card-body row justify-content-between">
-                <div className='btn-group'>
-                  <button type="button" className="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
-                  <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
-                </div>
+        <div className="col-md-4">
+          <div className="card text-center shadow-sm">
+            <div className="card-body">
+              <div className='btn-group'>
+                <button type="button" className="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#confirmDelCardsModal">Delete All Cards</button>
+                <button type="button" className="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelListModal">Delete List</button>
               </div>
             </div>
           </div>

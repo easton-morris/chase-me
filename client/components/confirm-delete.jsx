@@ -22,11 +22,13 @@ export default class ConfirmDelete extends React.Component {
   }
 
   confirmDelHandler(event) {
-    const listId = 2;
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    const listId = this.props.activeList;
     fetch(`/api/cardLists/${listId}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
       },
       body: JSON.stringify({
         cardId: this.state.cardToRemove.cardId

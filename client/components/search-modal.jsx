@@ -26,6 +26,7 @@ export default class SearchModal extends React.Component {
   }
 
   cardSelectHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     const $thList = document.querySelectorAll('th');
     for (let jj = 0; jj < $thList.length; jj++) {
       $thList[jj].className = '';
@@ -36,7 +37,8 @@ export default class SearchModal extends React.Component {
     fetch(`/api/cards/${event.target.textContent}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
       }
     })
       .then(result => {
@@ -90,11 +92,13 @@ export default class SearchModal extends React.Component {
   }
 
   addCardHandler(event) {
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     const listId = this.props.activeList;
     fetch(`/api/cardLists/${listId}`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
       },
       body: JSON.stringify({
         cardId: this.state.cardToAdd.cardId
@@ -130,7 +134,14 @@ export default class SearchModal extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/cards/names')
+    const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    fetch('/api/cards/names', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
+      }
+    })
       .then(res => {
         if (!res.ok) {
           throw new Error('Something went wrong.');
@@ -145,7 +156,13 @@ export default class SearchModal extends React.Component {
       })
       .catch(err => console.error(err));
 
-    fetch('/api/cards/sample/10')
+    fetch('/api/cards/sample/10', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': currUser.token
+      }
+    })
       .then(res => {
         if (!res.ok) {
           throw new Error('Something went wrong.');
@@ -177,7 +194,7 @@ export default class SearchModal extends React.Component {
                   <h4>Search by Name</h4>
                   <div className="search-area">
                     <form action="" onSubmit={this.searchHandler}>
-                        <label htmlFor="cardSearch" className="form-label">...then select an ID and click &#34;Add Card&#34;</label>
+                        <label htmlFor="cardSearch" className="form-label">...then click on an ID and click &#34;Add Card&#34;</label>
                       <div className="row">
                         <div className="col-auto">
                           <input className="form-control" list="nameList" id="cardSearch" placeholder="Jolteon"/>

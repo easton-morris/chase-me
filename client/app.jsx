@@ -3,6 +3,7 @@ import Home from './pages/home';
 import Header from './components/header';
 import Info from './pages/info';
 import List from './pages/list';
+import Login from './pages/login';
 import { parseRoute } from './lib';
 
 export default class App extends React.Component {
@@ -10,11 +11,15 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.logoutUser = this.logoutUser.bind(this);
+
     this.state = {
-      route: parseRoute(window.location.hash),
-      // loggedIn: parseRoute(window.location.hash).params.get('userId')
-      loggedIn: 1
+      route: parseRoute(window.location.hash)
     };
+  }
+
+  logoutUser() {
+    window.localStorage.removeItem('currentUser');
   }
 
   componentDidMount() {
@@ -33,14 +38,17 @@ export default class App extends React.Component {
       return <Info />;
     } else if (route.path === 'mylists') {
       const listId = route.params.get('listId');
-      return <List activeUser={this.state.loggedIn} activeListId={listId} />;
+      const listName = route.params.get('listName');
+      return <List listName={listName} activeListId={listId} />;
+    } else if (route.path === 'login') {
+      return <Login />;
     }
   }
 
   render() {
     return (
     <>
-      <Header activeUser={this.state.loggedIn}/>
+      <Header logoutUser={this.logoutUser} />
       { this.renderPage() }
     </>
     );
