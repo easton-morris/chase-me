@@ -186,12 +186,7 @@ app.get('/api/cards/:id', (req, res, next) => {
         res.status(200).json(result.rows[0]);
       }
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
+    .catch(err => next(err));
 });
 
 // GET>> gets a users lists' info by its specific userId //
@@ -236,17 +231,31 @@ app.get('/api/cardLists/:listId', (req, res, next) => {
   }
 
   const sql = `
-    SELECT "cardId"
-    FROM "cardLists"
+    SELECT *
+    FROM "lists"
     WHERE "listId" = $1
   `;
   const params = [listId];
   db.query(sql, params)
     .then(result => {
       if (result.rows[0]) {
-        res.status(200).json(result.rows);
+        const sql = `
+          SELECT "cardId"
+          FROM "cardLists"
+          WHERE "listId" = $1
+        `;
+        const params = [listId];
+        db.query(sql, params)
+          .then(result => {
+            if (result.rows[0]) {
+              res.status(200).json(result.rows);
+            } else {
+              res.sendStatus(204);
+            }
+          })
+          .catch(err => next(err));
       } else {
-        res.sendStatus(204);
+        throw new ClientError(400, 'Something went wrong');
       }
     })
     .catch(err => next(err));

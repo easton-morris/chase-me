@@ -12,7 +12,8 @@ export default class List extends React.Component {
     this.state = {
       listId: this.props.activeListId,
       list: [],
-      cardToRemove: null
+      cardToRemove: null,
+      loadStatus: null
     };
 
     this.addCardToList = this.addCardToList.bind(this);
@@ -73,7 +74,15 @@ export default class List extends React.Component {
             list: []
           });
           return [];
+        } else if (res.status === 500) {
+          this.setState({
+            loadStatus: 500
+          });
+          throw new Error('Something went wrong.');
         } else {
+          this.setState({
+            loadStatus: 200
+          });
           return res.json();
         }
       })
@@ -128,7 +137,8 @@ export default class List extends React.Component {
             throw new Error('Something went wrong.');
           } else if (res.status === 204) {
             this.setState({
-              list: []
+              list: [],
+              loadStatus: 204
             });
             return [];
           } else {
@@ -169,25 +179,92 @@ export default class List extends React.Component {
   }
 
   render() {
-    return (
-      <>
-      <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
-      <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
-      <div className="container">
-        <div className="row g-4 justify-content-center">
-          <h1>{this.props.listName}</h1>
-        </div>
-        <hr />
-        <div className="row g-4">
-            <AddACard />
-            <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
-        </div>
-        <hr />
-        <div className="row g-4">
-            <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
-        </div>
-      </div>
-      </>
-    );
+    if (this.state.loadStatus === null) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4 justify-content-md-center">
+              <div className="spinner-border text-dark" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    } else if (this.state.loadStatus === 204) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <h3>This list is empty.</h3>
+            </div>
+          </div>
+        </>
+      );
+    } else if (this.state.loadStatus === 500) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <h3>Something went wrong.</h3>
+            </div>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
+            </div>
+          </div>
+        </>
+      );
+    }
   }
 }
