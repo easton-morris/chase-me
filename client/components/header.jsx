@@ -81,7 +81,7 @@ export default class Header extends React.Component {
         }
       })
         .then(res => {
-          if (!res.ok) {
+          if (!res.ok && this.props !== prevProps) {
             this.setState({
               lists: []
             });

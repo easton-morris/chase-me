@@ -43,7 +43,8 @@ export default class List extends React.Component {
 
   addCardToList(card) {
     this.setState({
-      list: [...this.state.list, card]
+      list: [...this.state.list, card],
+      loadStatus: 200
     });
   }
 
@@ -119,7 +120,7 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    if (prevState.loadStatus !== null && prevProps.activeListId !== this.props.activeListId) {
+    if (prevState.loadStatus !== null && prevProps !== this.props) {
       this.setState({
         loadStatus: null,
         listId: this.props.activeListId

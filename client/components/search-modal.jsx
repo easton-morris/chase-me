@@ -209,7 +209,7 @@ export default class SearchModal extends React.Component {
                         <label htmlFor="cardSearch" className="form-label">...then click on an ID and click &#34;Add Card&#34;</label>
                       <div className="row">
                         <div className="col-auto">
-                          <input className="form-control" list="nameList" id="cardSearch" placeholder="Jolteon"/>
+                          <input className="form-control" list="nameList" id="cardSearch" placeholder="ex: Jolteon"/>
                             <div id="noMatchWarn" className='alert alert-danger d-none'>
                               No matching cards.
                             </div>

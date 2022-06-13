@@ -12,7 +12,8 @@ export default class Home extends React.Component {
               <img className="img-fluid text-wrap" src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
             </div>
             <div id='skidArea' className='col-2'>
-              <img className="img-fluid text-wrap" src="../images/672Skiddo.png" alt="Skiddo" />
+              <span className='p-1 m-4 bg-info'>Skiddo</span>
+              <img className="img-fluid m-3 text-wrap" src="../images/672Skiddo.png" alt="Skiddo" />
             </div>
           </div>
           <h1>
