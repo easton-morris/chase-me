@@ -25,6 +25,8 @@ export default class SearchModal extends React.Component {
 
   }
 
+  // takes the id selected by the user and adds the id and card to the state for passing to the list component //
+
   cardSelectHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     const $thList = document.querySelectorAll('th');
@@ -92,6 +94,8 @@ export default class SearchModal extends React.Component {
     );
   }
 
+  // takes the card selected by the user previously and adds it to the list on the page and to the database when the button is clicked, then resets the state //
+
   addCardHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     const listId = this.props.activeList;
@@ -107,10 +111,19 @@ export default class SearchModal extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
+          this.props.dupeFail();
+          const $thList = document.querySelectorAll('th');
+          for (let jj = 0; jj < $thList.length; jj++) {
+            $thList[jj].className = '';
+          }
           throw new Error('Something went wrong.');
         } else {
           const card = this.state.cardToAdd;
           this.props.addCardToList(card);
+          const $thList = document.querySelectorAll('th');
+          for (let jj = 0; jj < $thList.length; jj++) {
+            $thList[jj].className = '';
+          }
           this.setState({
             cardToAdd: null,
             cardToAddId: null
@@ -118,7 +131,10 @@ export default class SearchModal extends React.Component {
         }
       })
       .catch(err => console.error(err));
+
   }
+
+  // updates the displayed card data when the user submits a valid query //
 
   searchHandler(event) {
     const $pokeSearch = document.getElementById('cardSearch');
@@ -224,7 +240,7 @@ export default class SearchModal extends React.Component {
                 </div>
               </div>
               <div className="results-table">
-                <table className="table table-striped">
+                <table className="table table-hover table-striped">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
@@ -238,7 +254,7 @@ export default class SearchModal extends React.Component {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button onClick={this.addCardHandler} type="button" className="btn btn-primary" data-bs-dismiss="modal">Add Card</button>
+                <button onClick={this.addCardHandler} id='addCardBtn' type="button" className="btn btn-primary" data-bs-dismiss="modal">Add Card</button>
             </div>
           </div>
         </div>

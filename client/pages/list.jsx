@@ -21,7 +21,17 @@ export default class List extends React.Component {
     this.selectCardToRemove = this.selectCardToRemove.bind(this);
     this.closeConfirmation = this.closeConfirmation.bind(this);
     this.resetList = this.resetList.bind(this);
+    this.dupeFail = this.dupeFail.bind(this);
   }
+
+  // updates the page to show the duplicate card failure  message //
+
+  dupeFail() {
+    const $dupeWarn = document.getElementById('dupeWarn');
+    $dupeWarn.className = 'alert alert-warning';
+  }
+
+  // resets the list after full card deletion and sets the page to load empty list //
 
   resetList() {
     this.setState({
@@ -30,11 +40,15 @@ export default class List extends React.Component {
     });
   }
 
+  // receives the card from the card items that the user wants to remove for holding in state //
+
   selectCardToRemove(card) {
     this.setState({
       cardToRemove: card
     });
   }
+
+  // resets the card that would have been removed to null if the deletion is canceled //
 
   closeConfirmation() {
     this.setState({
@@ -42,19 +56,38 @@ export default class List extends React.Component {
     });
   }
 
+  // receives the card from the search modal that the user chose and adds it to the page's list along with updating the page to list loaded status //
+
   addCardToList(card) {
+    const newList = [...this.state.list, card];
+    newList.sort(function (a, b) {
+      const nameA = a.cardName.toUpperCase();
+      const nameB = b.cardName.toUpperCase();
+
+      if (nameA < nameB) {
+        return -1;
+      } else
+      if (nameA > nameB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     this.setState({
-      list: [...this.state.list, card],
+      list: newList,
       loadStatus: 200
     });
   }
+
+  // receives the card that the user wanted to remove and removes it from the live list, returning the shorter list and updating load status correspondingly //
 
   removeCardFromList(card) {
     const newList = [...this.state.list];
     const targetCard = newList.findIndex(element => element.cardId === card.cardId);
     newList.splice(targetCard, 1);
     this.setState({
-      list: newList
+      list: newList,
+      loadStatus: (newList.length === 0) ? 204 : 200
     });
   }
 
@@ -108,6 +141,19 @@ export default class List extends React.Component {
             })
             .then(cardRes => {
               renderList.push(cardRes);
+              renderList.sort(function (a, b) {
+                const nameA = a.cardName.toUpperCase();
+                const nameB = b.cardName.toUpperCase();
+
+                if (nameA < nameB) {
+                  return -1;
+                } else
+                if (nameA > nameB) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              });
               this.setState({
                 list: renderList,
                 loadStatus: 200
@@ -120,6 +166,9 @@ export default class List extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const $dupeWarn = document.getElementById('dupeWarn');
+    $dupeWarn.className = 'alert alert-warning d-none';
+
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     if (prevState.loadStatus !== null && prevProps !== this.props) {
       this.setState({
@@ -215,6 +264,9 @@ export default class List extends React.Component {
               <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
             </div>
             <hr />
+            <div id='dupeWarn' className="alert alert-warning d-none" role="alert">
+              Cannot add duplicate card.
+            </div>
             <div className="row g-4 justify-content-md-center">
               <div className="spinner-border text-dark" role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -238,6 +290,9 @@ export default class List extends React.Component {
               <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
             </div>
             <hr />
+            <div id='dupeWarn' className="alert alert-warning d-none" role="alert">
+              Cannot add duplicate card.
+            </div>
             <div className="row g-4">
               <h3>This list is empty.</h3>
             </div>
@@ -259,6 +314,9 @@ export default class List extends React.Component {
               <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
             </div>
             <hr />
+            <div id='dupeWarn' className="alert alert-warning d-none" role="alert">
+              Cannot add duplicate card.
+            </div>
             <div className="row g-4">
               <h3>Something went wrong.</h3>
             </div>
@@ -268,7 +326,7 @@ export default class List extends React.Component {
     } else if (this.state.loadStatus === 200) {
       return (
         <>
-          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <SearchModal dupeFail={this.dupeFail} activeList={this.state.listId} addCardToList={this.addCardToList} />
           <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
           <div className="container">
             <div className="row g-4 justify-content-center">
@@ -280,6 +338,9 @@ export default class List extends React.Component {
               <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
             </div>
             <hr />
+            <div id='dupeWarn' className="alert alert-warning d-none" role="alert">
+              Cannot add duplicate card.
+            </div>
             <div className="row g-4">
               <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
             </div>

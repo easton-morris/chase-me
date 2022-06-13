@@ -10,6 +10,8 @@ export default class Login extends React.Component {
 
   }
 
+  // signs in the demo account with one click //
+
   demoSignInHandler(event) {
     fetch('/api/users/sign-in', {
       method: 'PATCH',
@@ -41,6 +43,9 @@ export default class Login extends React.Component {
 
     event.preventDefault();
   }
+
+  // takes the sign in input values and submits them to the back in and //
+  // roues accordingly //
 
   signinHandler(event) {
     const $username = document.getElementById('inputUNSignin');
@@ -79,6 +84,8 @@ export default class Login extends React.Component {
 
     event.preventDefault();
   }
+
+  // takes the sign up input values and submits them to the backend and updates accordingly //
 
   signupHandler(event) {
     const $username = document.getElementById('inputUNSignup');

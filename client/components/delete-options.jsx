@@ -11,6 +11,8 @@ export default class DeleteOptions extends React.Component {
 
   }
 
+  // takes the currently displayed list and deletes all cards from the DB and reset the live page status to empty list //
+
   delCardsHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
     fetch(`/api/cardLists/all/${this.props.activeList}`, {
@@ -32,6 +34,8 @@ export default class DeleteOptions extends React.Component {
       })
       .catch(err => console.error(err));
   }
+
+  // takes the currently displayed list and deletes it from the DB and routes the user to the home page //
 
   delListHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));

@@ -13,13 +13,7 @@ export default class ConfirmDelete extends React.Component {
 
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps && this.props.card !== null) {
-      this.setState({
-        cardToRemove: this.props.card
-      });
-    }
-  }
+  // takes the current active list and card data then deletes it from the DB and live page list and resets the card to be removed //
 
   confirmDelHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
@@ -48,8 +42,18 @@ export default class ConfirmDelete extends React.Component {
       .catch(err => console.error(err));
   }
 
+  // closes the modal using the passed function //
+
   refuseDelHandler(event) {
     this.props.closeConf();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps && this.props.card !== null) {
+      this.setState({
+        cardToRemove: this.props.card
+      });
+    }
   }
 
   render() {
