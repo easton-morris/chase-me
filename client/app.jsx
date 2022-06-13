@@ -4,6 +4,7 @@ import Header from './components/header';
 import Info from './pages/info';
 import List from './pages/list';
 import Login from './pages/login';
+import Footer from './components/footer';
 import { parseRoute } from './lib';
 
 export default class App extends React.Component {
@@ -50,6 +51,8 @@ export default class App extends React.Component {
     <>
       <Header logoutUser={this.logoutUser} />
       { this.renderPage() }
+      <hr />
+      <Footer />
     </>
     );
   }
