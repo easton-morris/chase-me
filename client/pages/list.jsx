@@ -68,17 +68,15 @@ export default class List extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
+          this.setState({
+            loadStatus: 500
+          });
           throw new Error('Something went wrong.');
         } else if (res.status === 204) {
           this.setState({
             list: []
           });
           return [];
-        } else if (res.status === 500) {
-          this.setState({
-            loadStatus: 500
-          });
-          throw new Error('Something went wrong.');
         } else {
           this.setState({
             loadStatus: 200
@@ -109,7 +107,8 @@ export default class List extends React.Component {
             .then(cardRes => {
               renderList.push(cardRes);
               this.setState({
-                list: renderList
+                list: renderList,
+                loadStatus: 200
               });
             })
             .catch(err => console.error(err));
@@ -120,10 +119,13 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    if (prevProps.activeListId !== this.props.activeListId) {
+    if (prevState.loadStatus !== null && prevProps.activeListId !== this.props.activeListId) {
       this.setState({
+        loadStatus: null,
         listId: this.props.activeListId
       });
+    } else if (this.state.loadStatus === null) {
+
       const activeList = [];
       fetch(`/api/cardLists/${this.props.activeListId}`, {
         method: 'GET',
@@ -134,6 +136,9 @@ export default class List extends React.Component {
       })
         .then(res => {
           if (!res.ok) {
+            this.setState({
+              loadStatus: 500
+            });
             throw new Error('Something went wrong.');
           } else if (res.status === 204) {
             this.setState({
@@ -167,8 +172,22 @@ export default class List extends React.Component {
               })
               .then(cardRes => {
                 renderList.push(cardRes);
+                renderList.sort(function (a, b) {
+                  const nameA = a.cardName.toUpperCase();
+                  const nameB = b.cardName.toUpperCase();
+
+                  if (nameA < nameB) {
+                    return -1;
+                  } else
+                  if (nameA > nameB) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
                 this.setState({
-                  list: renderList
+                  list: renderList,
+                  loadStatus: 200
                 });
               })
               .catch(err => console.error(err));
@@ -244,7 +263,7 @@ export default class List extends React.Component {
           </div>
         </>
       );
-    } else {
+    } else if (this.state.loadStatus === 200) {
       return (
         <>
           <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
