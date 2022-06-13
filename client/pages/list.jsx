@@ -205,7 +205,7 @@ export default class List extends React.Component {
           <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
           <div className="container">
             <div className="row g-4 justify-content-center">
-              <h1>{this.props.listName}</h1>
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
             </div>
             <hr />
             <div className="row g-4">
@@ -228,7 +228,7 @@ export default class List extends React.Component {
           <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
           <div className="container">
             <div className="row g-4 justify-content-center">
-              <h1>{this.props.listName}</h1>
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
             </div>
             <hr />
             <div className="row g-4">
@@ -249,7 +249,7 @@ export default class List extends React.Component {
           <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
           <div className="container">
             <div className="row g-4 justify-content-center">
-              <h1>{this.props.listName}</h1>
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
             </div>
             <hr />
             <div className="row g-4">
@@ -270,7 +270,7 @@ export default class List extends React.Component {
           <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
           <div className="container">
             <div className="row g-4 justify-content-center">
-              <h1>{this.props.listName}</h1>
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
             </div>
             <hr />
             <div className="row g-4">

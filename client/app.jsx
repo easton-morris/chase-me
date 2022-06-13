@@ -15,7 +15,8 @@ export default class App extends React.Component {
     this.logoutUser = this.logoutUser.bind(this);
 
     this.state = {
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      onlineStatus: true
     };
   }
 
@@ -24,6 +25,16 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener('offline', event => {
+      this.setState({
+        onlineStatus: false
+      });
+    });
+    window.addEventListener('online', event => {
+      this.setState({
+        onlineStatus: true
+      });
+    });
     window.addEventListener('hashchange', () => {
       this.setState(prevState => (
         { route: parseRoute(window.location.hash) }
@@ -47,13 +58,26 @@ export default class App extends React.Component {
   }
 
   render() {
-    return (
-    <>
-      <Header logoutUser={this.logoutUser} />
-      { this.renderPage() }
-      <hr />
-      <Footer />
-    </>
-    );
+    if (this.state.onlineStatus) {
+      return (
+      <>
+        <Header logoutUser={this.logoutUser} />
+        { this.renderPage() }
+        <hr />
+        <Footer />
+      </>
+      );
+    } else {
+      return (
+        <>
+          <Header logoutUser={this.logoutUser} />
+          <div className='d-flex justify-content-center'>
+            <h1>You are offline.</h1>
+          </div>
+          <hr />
+          <Footer />
+        </>
+      );
+    }
   }
 }

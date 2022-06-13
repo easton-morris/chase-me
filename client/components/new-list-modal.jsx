@@ -10,10 +10,19 @@ export default class NewListModal extends React.Component {
   }
 
   buttonEnableHandler(event) {
+    const $tooLong = document.getElementById('tooLongWarn');
+    const $createListBtn = document.getElementById('createListBtn');
     if (document.getElementById('newListName').value !== '') {
-      document.getElementById('createListBtn').removeAttribute('disabled');
+      $createListBtn.removeAttribute('disabled');
     } else {
-      document.getElementById('createListBtn').setAttribute('disabled', '');
+      $createListBtn.setAttribute('disabled', '');
+    }
+    if (document.getElementById('newListName').value.length > 12) {
+      $createListBtn.setAttribute('disabled', '');
+      $tooLong.className = 'alert alert-danger';
+    } else {
+      $createListBtn.removeAttribute('disabled');
+      $tooLong.className = 'alert alert-danger d-none';
     }
   }
 
@@ -45,9 +54,10 @@ export default class NewListModal extends React.Component {
         })
         .then(newListInfo => {
           newListId = newListInfo.listId;
-          document.getElementById('newListName').value = '';
+          const newListName = document.getElementById('newListName').value;
+          document.getElementById('newListName').valuenewListName = '';
 
-          window.location.href = `#mylists?&listId=${newListId}`;
+          window.location.href = `#mylists?listId=${newListId}&listName=${newListName}`;
         })
         .catch(err => console.error(err));
     }
@@ -72,6 +82,9 @@ export default class NewListModal extends React.Component {
                   <input onChange={this.buttonEnableHandler} type="text" className="form-control" id="newListName" required></input>
                   <div className="invalid-feedback">
                     Please enter a List Name.
+                  </div>
+                  <div id="tooLongWarn" className='alert alert-danger d-none'>
+                    List Name is too long.
                   </div>
                 </div>
                 <div className='modal-footer'>
