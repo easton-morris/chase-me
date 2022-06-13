@@ -9,10 +9,11 @@ export default class Home extends React.Component {
         <div className="welcomeBox">
           <div className='row align-items-end'>
             <div id='sycArea' className='col-4'>
-              <img className="img-fluid text-wrap" src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
+              <img className="img-fluid" src="../images/ProfessorSycamoreAnime.png" alt="Professor Sycamore" />
             </div>
             <div id='skidArea' className='col-2'>
-              <img className="img-fluid text-wrap" src="../images/672Skiddo.png" alt="Skiddo" />
+              <span className='p-1 m-4 bg-info'>Skiddo</span>
+              <img className="img-fluid m-3" src="../images/672Skiddo.png" alt="Skiddo" />
             </div>
           </div>
           <h1>

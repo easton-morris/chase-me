@@ -84,10 +84,11 @@ export default class SearchModal extends React.Component {
     const listItems = pokeList.map(pokeCard =>
       <this.SearchModalItem key={pokeCard.id} value={pokeCard} />
     );
+
     return (
-      <tbody>
-        {listItems}
-      </tbody>
+        <tbody>
+          {listItems}
+        </tbody>
     );
   }
 
@@ -121,7 +122,8 @@ export default class SearchModal extends React.Component {
 
   searchHandler(event) {
     const $pokeSearch = document.getElementById('cardSearch');
-    if ($pokeSearch.value !== this.state.searchValue) {
+    const rawValue = $pokeSearch.value.replaceAll(' ', '');
+    if ($pokeSearch.value !== this.state.searchValue && $pokeSearch.value !== '' && rawValue !== '') {
       pokemon.card.all({ q: `name:"${$pokeSearch.value}"` })
         .then(result => {
           this.setState({
@@ -178,6 +180,16 @@ export default class SearchModal extends React.Component {
       .catch(err => console.error(err));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const $noMatchWarn = document.getElementById('noMatchWarn');
+
+    if (this.state.pokeList.length === 0) {
+      $noMatchWarn.className = 'alert alert-danger';
+    } else {
+      $noMatchWarn.className = 'alert alert-danger d-none';
+    }
+  }
+
   render() {
     return (
       <>
@@ -197,7 +209,10 @@ export default class SearchModal extends React.Component {
                         <label htmlFor="cardSearch" className="form-label">...then click on an ID and click &#34;Add Card&#34;</label>
                       <div className="row">
                         <div className="col-auto">
-                          <input className="form-control" list="nameList" id="cardSearch" placeholder="Jolteon"/>
+                          <input className="form-control" list="nameList" id="cardSearch" placeholder="ex: Jolteon"/>
+                            <div id="noMatchWarn" className='alert alert-danger d-none'>
+                              No matching cards.
+                            </div>
                           <this.SearchDatalist />
                         </div>
                         <div className="col-auto">

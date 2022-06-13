@@ -12,7 +12,8 @@ export default class List extends React.Component {
     this.state = {
       listId: this.props.activeListId,
       list: [],
-      cardToRemove: null
+      cardToRemove: null,
+      loadStatus: null
     };
 
     this.addCardToList = this.addCardToList.bind(this);
@@ -24,7 +25,8 @@ export default class List extends React.Component {
 
   resetList() {
     this.setState({
-      list: []
+      list: [],
+      loadStatus: 204
     });
   }
 
@@ -42,7 +44,8 @@ export default class List extends React.Component {
 
   addCardToList(card) {
     this.setState({
-      list: [...this.state.list, card]
+      list: [...this.state.list, card],
+      loadStatus: 200
     });
   }
 
@@ -67,6 +70,9 @@ export default class List extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
+          this.setState({
+            loadStatus: 500
+          });
           throw new Error('Something went wrong.');
         } else if (res.status === 204) {
           this.setState({
@@ -74,6 +80,9 @@ export default class List extends React.Component {
           });
           return [];
         } else {
+          this.setState({
+            loadStatus: 200
+          });
           return res.json();
         }
       })
@@ -100,7 +109,8 @@ export default class List extends React.Component {
             .then(cardRes => {
               renderList.push(cardRes);
               this.setState({
-                list: renderList
+                list: renderList,
+                loadStatus: 200
               });
             })
             .catch(err => console.error(err));
@@ -111,10 +121,13 @@ export default class List extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
-    if (prevProps.activeListId !== this.props.activeListId) {
+    if (prevState.loadStatus !== null && prevProps !== this.props) {
       this.setState({
+        loadStatus: null,
         listId: this.props.activeListId
       });
+    } else if (this.state.loadStatus === null) {
+
       const activeList = [];
       fetch(`/api/cardLists/${this.props.activeListId}`, {
         method: 'GET',
@@ -125,10 +138,14 @@ export default class List extends React.Component {
       })
         .then(res => {
           if (!res.ok) {
+            this.setState({
+              loadStatus: 500
+            });
             throw new Error('Something went wrong.');
           } else if (res.status === 204) {
             this.setState({
-              list: []
+              list: [],
+              loadStatus: 204
             });
             return [];
           } else {
@@ -157,8 +174,22 @@ export default class List extends React.Component {
               })
               .then(cardRes => {
                 renderList.push(cardRes);
+                renderList.sort(function (a, b) {
+                  const nameA = a.cardName.toUpperCase();
+                  const nameB = b.cardName.toUpperCase();
+
+                  if (nameA < nameB) {
+                    return -1;
+                  } else
+                  if (nameA > nameB) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
                 this.setState({
-                  list: renderList
+                  list: renderList,
+                  loadStatus: 200
                 });
               })
               .catch(err => console.error(err));
@@ -169,25 +200,92 @@ export default class List extends React.Component {
   }
 
   render() {
-    return (
-      <>
-      <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
-      <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
-      <div className="container">
-        <div className="row g-4 justify-content-center">
-          <h1>{this.props.listName}</h1>
-        </div>
-        <hr />
-        <div className="row g-4">
-            <AddACard />
-            <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
-        </div>
-        <hr />
-        <div className="row g-4">
-            <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
-        </div>
-      </div>
-      </>
-    );
+    if (this.state.loadStatus === null) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4 justify-content-md-center">
+              <div className="spinner-border text-dark" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    } else if (this.state.loadStatus === 204) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <h3>This list is empty.</h3>
+            </div>
+          </div>
+        </>
+      );
+    } else if (this.state.loadStatus === 500) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <h3>Something went wrong.</h3>
+            </div>
+          </div>
+        </>
+      );
+    } else if (this.state.loadStatus === 200) {
+      return (
+        <>
+          <SearchModal activeList={this.state.listId} addCardToList={this.addCardToList} />
+          <ConfirmDelete activeList={this.state.listId} card={this.state.cardToRemove} closeConf={this.closeConfirmation} removeCardFromList={this.removeCardFromList} />
+          <div className="container">
+            <div className="row g-4 justify-content-center">
+              <h1 className='overflow-hidden'>{this.props.listName}</h1>
+            </div>
+            <hr />
+            <div className="row g-4">
+              <AddACard />
+              <DeleteOptions activeList={this.state.listId} resetList={this.resetList} />
+            </div>
+            <hr />
+            <div className="row g-4">
+              <CardItems selCardToRemove={this.selectCardToRemove} list={this.state.list} />
+            </div>
+          </div>
+        </>
+      );
+    }
   }
 }
