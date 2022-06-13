@@ -25,7 +25,8 @@ export default class List extends React.Component {
 
   resetList() {
     this.setState({
-      list: []
+      list: [],
+      loadStatus: 204
     });
   }
 
