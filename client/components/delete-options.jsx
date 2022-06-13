@@ -53,7 +53,8 @@ export default class DeleteOptions extends React.Component {
         fetch(`/api/lists/${this.props.activeList}`, {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-access-token': currUser.token
           }
         })
           .then(res => {

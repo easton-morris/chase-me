@@ -6,7 +6,40 @@ export default class Login extends React.Component {
 
     this.signinHandler = this.signinHandler.bind(this);
     this.signupHandler = this.signupHandler.bind(this);
+    this.demoSignInHandler = this.demoSignInHandler.bind(this);
 
+  }
+
+  demoSignInHandler(event) {
+    fetch('/api/users/sign-in', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: 'admin',
+        password: 'GottaCatchEmAll'
+      })
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Something went wrong.');
+        } else {
+          return res.json();
+        }
+      })
+      .then(response => {
+        const currentUser = window.localStorage.getItem('currentUser');
+        if (currentUser) {
+          window.localStorage.removeItem('currentUser');
+        }
+        window.localStorage.setItem('currentUser', JSON.stringify(response));
+
+        window.location.href = '#?user=signin';
+      })
+      .catch(err => console.error(err));
+
+    event.preventDefault();
   }
 
   signinHandler(event) {
@@ -116,7 +149,8 @@ export default class Login extends React.Component {
                   Password or username is incorrect.
                 </div>
               </div>
-              <button type="submit" form='signin' className="btn btn-primary">Sign In</button>
+              <button type="submit" form='signin' className="m-2 btn btn-primary">Sign In</button>
+              <button onClick={this.demoSignInHandler} className="m-2 btn btn-info">Click Here for Demo Account</button>
             </form>
           </div>
           <hr />
