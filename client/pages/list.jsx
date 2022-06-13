@@ -59,8 +59,22 @@ export default class List extends React.Component {
   // receives the card from the search modal that the user chose and adds it to the page's list along with updating the page to list loaded status //
 
   addCardToList(card) {
+    const newList = [...this.state.list, card];
+    newList.sort(function (a, b) {
+      const nameA = a.cardName.toUpperCase();
+      const nameB = b.cardName.toUpperCase();
+
+      if (nameA < nameB) {
+        return -1;
+      } else
+      if (nameA > nameB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     this.setState({
-      list: [...this.state.list, card],
+      list: newList,
       loadStatus: 200
     });
   }
@@ -127,6 +141,19 @@ export default class List extends React.Component {
             })
             .then(cardRes => {
               renderList.push(cardRes);
+              renderList.sort(function (a, b) {
+                const nameA = a.cardName.toUpperCase();
+                const nameB = b.cardName.toUpperCase();
+
+                if (nameA < nameB) {
+                  return -1;
+                } else
+                if (nameA > nameB) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              });
               this.setState({
                 list: renderList,
                 loadStatus: 200
