@@ -23,6 +23,8 @@ const insertSql = `
   RETURNING "cardId"
 `;
 
+// pulls in all the pages available in the PokeTCG API, cycles through the 250 cards to see if it is already in the list, and adds them to the list of cards if not //
+
 for (let ii = 1; ii < 60; ii++) {
   pokemon.card.where({ page: ii })
     .then(result => {

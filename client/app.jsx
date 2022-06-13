@@ -20,6 +20,8 @@ export default class App extends React.Component {
     };
   }
 
+  // removes user creds from the localstorage //
+
   logoutUser() {
     window.localStorage.removeItem('currentUser');
   }

@@ -9,6 +9,8 @@ export default class NewListModal extends React.Component {
 
   }
 
+  // enables the user to click the button when the list name value is valid //
+
   buttonEnableHandler(event) {
     const $tooLong = document.getElementById('tooLongWarn');
     const $createListBtn = document.getElementById('createListBtn');
@@ -25,6 +27,8 @@ export default class NewListModal extends React.Component {
       $tooLong.className = 'alert alert-danger d-none';
     }
   }
+
+  // takes the values submitted by the user and creates a new list for them in the DB with the values and routes them to that list //
 
   newListHandler(event) {
     const currUser = JSON.parse(window.localStorage.getItem('currentUser'));

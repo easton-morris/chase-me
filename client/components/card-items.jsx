@@ -13,6 +13,8 @@ export default class CardItems extends React.Component {
     };
   }
 
+  // uses passed function to send the card info for removal to the list component //
+
   removeHandler(obj) {
     this.props.selCardToRemove(obj);
   }
