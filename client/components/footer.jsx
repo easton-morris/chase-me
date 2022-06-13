@@ -8,7 +8,9 @@ export default class Footer extends React.Component {
         <div className="container">
           <div className="row justify-content-md-center">
             <div className="col">
-              Original Content &copy; Easton Morris 2022. &copy; 2022 Pokémon. &copy; 1995 - 2022 Nintendo / Creatures Inc./ GAME FREAK inc.TM and character names are trademarks of Nintendo.
+              Original Content: &copy; Easton Morris 2022.
+              <br />
+              TCG Content: &copy; 2022 Pokémon. &copy; 1995 - 2022 Nintendo / Creatures Inc./ GAME FREAK inc.TM and character names are trademarks of Nintendo.
             </div>
           </div>
         </div>

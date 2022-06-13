@@ -25,13 +25,23 @@ export default class Header extends React.Component {
     const usersCardListsItems = usersCardLists.map(list =>
       <this.UserListsItem key={list.listId} value={list} />
     );
-    return (
+    if (this.state.lists.length === 0) {
+      return (
       <ul className="p-2 dropdown-menu" aria-labelledby="listsDropdown">
-        {usersCardListsItems}
+        <li>No lists found.</li>
         <li><hr className="dropdown-divider"></hr></li>
         <li><button data-bs-toggle="modal" data-bs-target="#newListModal" className="btn-sm btn-outline-dark">+New List</button></li>
       </ul>
-    );
+      );
+    } else {
+      return (
+        <ul className="p-2 dropdown-menu" aria-labelledby="listsDropdown">
+          {usersCardListsItems}
+          <li><hr className="dropdown-divider"></hr></li>
+          <li><button data-bs-toggle="modal" data-bs-target="#newListModal" className="btn-sm btn-outline-dark">+New List</button></li>
+        </ul>
+      );
+    }
   }
 
   componentDidMount() {
@@ -72,6 +82,9 @@ export default class Header extends React.Component {
       })
         .then(res => {
           if (!res.ok) {
+            this.setState({
+              lists: []
+            });
             throw new Error('Something went wrong.');
           } else {
             return res.json();
@@ -114,6 +127,9 @@ export default class Header extends React.Component {
                 </li>
                 <li className={currUser ? 'nav-item ' : 'nav-item d-none'}>
                   <a onClick={this.props.logoutUser} href={'#?user=logout'} className="nav-link">Logout</a>
+                </li>
+                <li className={!currUser ? 'nav-item ' : 'nav-item d-none'}>
+                  <a href={'#login'} className="nav-link">Login</a>
                 </li>
               </ul>
             </div>
