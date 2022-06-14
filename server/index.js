@@ -7,6 +7,8 @@ const authorizationMiddleware = require('./authorization-middleware');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const ClientError = require('./client-error');
+const pokemon = require('pokemontcgsdk');
+pokemon.configure({ apiKey: process.env.PKMN_APIKEY });
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -22,6 +24,53 @@ app.use(staticMiddleware);
 const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
+
+// GET>> updates cards list with current cards //
+
+app.get('/api/cards/update-cards', (req, res, next) => {
+  const checkSql = `
+  SELECT *
+    FROM "cards"
+    WHERE "cardId" = $1
+`;
+
+  const insertSql = `
+  INSERT INTO "cards" ("cardId", "cardName", "setName", "smallPic", "largePic", "cardNum", "cardObj")
+  VALUES ($1, $2, $3, $4, $5, $6, $7)
+  RETURNING "cardId"
+`;
+
+  // pulls in all the pages available in the PokeTCG API, cycles through the 250 cards to see if it is already in the list, and adds them to the list of cards if not //
+
+  for (let ii = 1; ii < 60; ii++) {
+    pokemon.card.where({ page: ii })
+      .then(result => {
+        for (let jj = 0; jj < 250; jj++) {
+          const currentCard = result.data[jj];
+          const params = [currentCard.id];
+          db.query(checkSql, params)
+            .then(result => {
+              if (result.rowCount === 0) {
+                const params = [currentCard.id, currentCard.name, currentCard.set.name, currentCard.images.small, currentCard.images.large, currentCard.number, currentCard];
+                db.query(insertSql, params)
+                  .then(result => {
+                    const [newRes] = result.rows;
+                    // eslint-disable-next-line
+                    console.log(newRes);
+                  })
+                  .catch(Error => console.error(Error));
+              }
+            })
+            .catch(Error => console.error(Error));
+        }
+      })
+      .catch(Error => console.error(Error, 'reached end of list.'))
+      .finally(() => {
+        // eslint-disable-next-line
+        console.log(`finished with update, page ${ii}`);
+      });
+  }
+});
 
 // PATCH>> checks a user's password to make sure it matches before signing in
 
