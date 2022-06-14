@@ -68,6 +68,7 @@ app.get('/api/cards/update-cards', (req, res, next) => {
       .finally(() => {
         // eslint-disable-next-line
         console.log(`finished with update, page ${ii}`);
+        res.status(200);
       });
   }
 });
