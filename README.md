@@ -45,7 +45,9 @@ Link to the app:
 
 #### The App In Action
 
+![Chase Me: Create List and Add Card](server/public/images/ExampleChaseMe1.gif)
 
+![Chase Me: Delete all cards and Delete List](server/public/images/ExampleChaseMe2.gif)
 
 #### Stretch Features
 
@@ -80,7 +82,7 @@ Link to the app:
 ```
 
 7. Go to [The Pokémon TCG API](https://dev.pokemontcg.io/) and create an account.
-User their documentation to obtain an API key.
+Use their documentation to obtain an API key.
 
 8. Make a copy of the .env.example file and name it .env. Then, update the config
 values with your Database name, API key, and Token Secret for JSON Web Tokens.
@@ -98,9 +100,13 @@ values with your Database name, API key, and Token Secret for JSON Web Tokens.
 
     npm run db:import
 
-    npm run cards
+    npm run cards /* updates Database with latest cards from API */
 
     pgweb --db=my-chaseme
 ```
 
 11. Start the project. Once started you can view the application by opening (http://localhost:3000) in your browser.
+
+```shell
+    npm run dev
+```
