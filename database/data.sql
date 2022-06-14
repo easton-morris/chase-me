@@ -3,7 +3,7 @@ VALUES ('admin', 'admin@test.com', '$argon2i$v=19$m=4096,t=3,p=1$gRptO+CxNhYRr3S
 RETURNING *;
 
 INSERT INTO "lists" ("userId", "listName", "cards", "capped")
-VALUES (1, 'ExampleList', {}, false)
+VALUES (1, 'ExampleList', [], false)
 RETURNING *;
 
 INSERT INTO "cardLists" ("listId", "cardId")
