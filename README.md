@@ -14,7 +14,7 @@ what cards you are looking for, but it is even better when you can SHOW them.
 
 So, I created Chase.me for an easy way to do just that for the Pokémon TCG.
 
-Link to the app:
+Link to the app: (https://em-chase-me.herokuapp.com/)
 
 ### Tech Stack
 
