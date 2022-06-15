@@ -51,9 +51,18 @@ export default class App extends React.Component {
     } else if (route.path === 'info') {
       return <Info />;
     } else if (route.path === 'mylists') {
+      const currUser = JSON.parse(window.localStorage.getItem('currentUser'));
       const listId = route.params.get('listId');
       const listName = route.params.get('listName');
-      return <List listName={listName} activeListId={listId} />;
+      if (currUser) {
+        return <List listName={listName} activeListId={listId} />;
+      } else {
+        return (
+          <div className='d-flex justify-content-center'>
+            <h1>You are not logged in.</h1>
+          </div>
+        );
+      }
     } else if (route.path === 'login') {
       return <Login />;
     }
