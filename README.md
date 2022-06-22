@@ -78,7 +78,7 @@ Link to the app: (https://em-chase-me.herokuapp.com/)
 
 ```shell
     git clone https://github.com/easton-morris/chase-me.git
-    cd sgt-react
+    cd chase-me
 ```
 
 7. Go to [The Pokémon TCG API](https://dev.pokemontcg.io/) and create an account.
