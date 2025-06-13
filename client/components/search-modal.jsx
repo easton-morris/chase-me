@@ -219,7 +219,7 @@ export default class SearchModal extends React.Component {
             <div className="modal-body">
               <div className="search-header">
                 <div className="search-text">
-                  <h4>Search by Name</h4>
+                  <h4>Search by Card Name</h4>
                   <div className="search-area">
                     <form action="" onSubmit={this.searchHandler}>
                         <label htmlFor="cardSearch" className="form-label">...then click on an ID and click &#34;Add Card&#34;</label>
@@ -227,7 +227,7 @@ export default class SearchModal extends React.Component {
                         <div className="col-auto">
                           <input className="form-control" list="nameList" id="cardSearch" placeholder="ex: Jolteon"/>
                             <div id="noMatchWarn" className='alert alert-danger d-none'>
-                              No matching cards.
+                              No matching card names.
                             </div>
                           <this.SearchDatalist />
                         </div>
